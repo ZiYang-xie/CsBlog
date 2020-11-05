@@ -13,7 +13,7 @@ timezone: ''
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://example.com/child' and root as '/child/'
-url: https://fdu2019xzy.github.io/Riker.github.io/
+url: https://fdu2019xzy.github.io/CsBlog/
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -104,5 +104,5 @@ theme: landscape
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repository: https://github.com/fdu2019xzy/Riker.github.io.git
+  repository: https://github.com/fdu2019xzy/CsBlog.git
   branch: main
