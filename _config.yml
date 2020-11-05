@@ -103,6 +103,4 @@ theme: landscape
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: 'git'
-  repository: 'https://github.com/fdu2019xzy/Riker.github.io'
-  branch: 'main'
+  type: ''
