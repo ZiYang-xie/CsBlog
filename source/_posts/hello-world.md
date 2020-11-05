@@ -1,38 +1,35 @@
 ---
 title: Hello World
+tags: [Hexo, Fluid]
+index_img: /img/post1/top.png
+date: 2020-11-5 10:00:00
 ---
-Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [documentation](https://hexo.io/docs/) for more info. If you get any problems when using Hexo, you can find the answer in [troubleshooting](https://hexo.io/docs/troubleshooting.html) or you can ask me on [GitHub](https://github.com/hexojs/hexo/issues).
 
-## Quick Start
+## 第一篇博客用以测试
 
-### Create a new post
+### 一、 下面是一段C++代码
+```cpp
+#include <iostream>
+using namespace std;
 
-``` bash
-$ hexo new "My New Post"
+int main()
+{
+    cout << "Hello World!" << endl;
+}
 ```
 
-More info: [Writing](https://hexo.io/docs/writing.html)
+### 二、 下面是一段表格
 
-### Run server
+| 0 | 1 | 2 | 3 | 4 | 
+| :---: | :---: | :---: | :---: | :---: |
+| x | x | x | x | x |
 
-``` bash
-$ hexo server
-```
+### 三、 下面是一段 Latex
 
-More info: [Server](https://hexo.io/docs/server.html)
 
-### Generate static files
+$$E= mc^2$$
 
-``` bash
-$ hexo generate
-```
 
-More info: [Generating](https://hexo.io/docs/generating.html)
+### 四、下面是一张图片
 
-### Deploy to remote sites
-
-``` bash
-$ hexo deploy
-```
-
-More info: [Deployment](https://hexo.io/docs/one-command-deployment.html)
+![](https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRP-ciAYVH8UlH3ZaZC3NkN3ow9CrG36O5crg&usqp=CAU)
