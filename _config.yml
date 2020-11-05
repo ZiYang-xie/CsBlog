@@ -105,4 +105,4 @@ theme: jekyll-theme-slate
 deploy:
   type: git
   repository: https://github.com/fdu2019xzy/Riker.github.io.git
-  branch: gh-pages
+  branch: main
