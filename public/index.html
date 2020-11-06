@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="Xzy">
   <meta name="keywords" content="">
-  <title>Rikler&#39;s Blog</title>
+  <title>Xavier&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
@@ -179,24 +179,103 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/CsBlog/2020/11/05/Ariticle/" target="_self">
-          <img src="/CsBlog/img/post2/top.jpg" srcset="/CsBlog/img/loading.gif" alt="Ariticle">
+        <a href="/CsBlog/2020/11/06/ICS_Lab2/" target="_self">
+          <img src="/CsBlog/img/ICS-Lab2/top.jpg" srcset="/CsBlog/img/loading.gif" alt="ICS-Lab2 二进制炸弹">
         </a>
       </div>
     
     <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/CsBlog/2020/11/05/Ariticle/">Ariticle</a>
+        <a href="/CsBlog/2020/11/06/ICS_Lab2/">ICS-Lab2 二进制炸弹</a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/CsBlog/2020/11/05/Ariticle/">
+        <a href="/CsBlog/2020/11/06/ICS_Lab2/">
           
           
             
           
+          ICS-Lab2-Bomb
+这个是CS:APP的第二个lab，主要着重于汇编代码的阅读
+
+
+完成截图
+
+Phase 1 - 入门一、分析
+练手入门题，用esi寄存器储存答案地址 (一个立即数)
+
+mov    $0x402400,%esi
+
+之后调用了一个 string_not_equal 函数比较输入和答案是否一致，一致就通过了。
+
+callq  401338 &lt;strings_not_e
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-11-06 15:44" pubdate>
+              2020-11-06
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/CsBlog/categories/ICS/">ICS</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/CsBlog/tags/Assembly/">Assembly</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/CsBlog/2020/11/05/ICS_Lab1/" target="_self">
+          <img src="/CsBlog/img/ICS_Lab1/top.jpg" srcset="/CsBlog/img/loading.gif" alt="ICS-Lab1 位运算">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/CsBlog/2020/11/05/ICS_Lab1/">ICS-Lab1 位运算</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/CsBlog/2020/11/05/ICS_Lab1/">
           
+          
+            
+          
+          ICS_Lab1-位运算
+这个是CS:APP的第一个lab，也是我ICS课上的第一个lab，主要注重于使用受限制的位运算来完成操作
+
+
+Bits.c1. bitAnd–与题目：
+只用~和|实现&amp;
+样例：
+bitAnd(6, 5) = 4
+可使用操作： ~ |
+最大操作数限制： 8
+使用操作数： 4
+int bitAnd(int x, int y) &#123;
+  return ~(~x 
         </a>
       </p>
 
@@ -210,11 +289,18 @@
           </div>
         
         
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/CsBlog/categories/ICS/">ICS</a>
+            
+          </div>
+        
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/CsBlog/tags/test/">test</a>
+              <a href="/CsBlog/tags/Bits/">Bits</a>
             
           </div>
         
@@ -227,7 +313,7 @@
     
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/CsBlog/2020/11/05/hello-world/" target="_self">
-          <img src="/CsBlog/img/post1/top.png" srcset="/CsBlog/img/loading.gif" alt="Hello World">
+          <img src="/CsBlog/img/hello_world/top.png" srcset="/CsBlog/img/loading.gif" alt="Hello World">
         </a>
       </div>
     
@@ -343,7 +429,7 @@ x
 
   <footer class="text-center mt-5 py-3">
   <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+     <p>Fight For The Happiness of Humanity</p> <div> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/CsBlog/js/duration.js"></script> </div> 
   </div>
   
 

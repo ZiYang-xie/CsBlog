@@ -1,7 +1,7 @@
 ---
 title: Hello World
 tags: [Hexo, Fluid]
-index_img: /img/post1/top.png
+index_img: /img/hello_world/top.png
 date: 2020-11-5 10:00:00
 ---
 
