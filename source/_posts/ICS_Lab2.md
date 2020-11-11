@@ -1,6 +1,6 @@
 ---
 title: ICS-Lab2 二进制炸弹
-index_img: /img/ICS-Lab2/top.jpg
+index_img: /img/ICS_Lab1/top.jpg
 date: 2020-11-06 15:44:39
 category: [ICS]
 tags: [Assembly]

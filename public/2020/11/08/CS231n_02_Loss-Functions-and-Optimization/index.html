@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="Xzy">
   <meta name="keywords" content="">
-  <title>Hello World - Xavier&#39;s Blog</title>
+  <title>CS231n Loss Functions and Optimization 02 - Xavier&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
@@ -162,7 +162,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Hello World">
+            <span class="h2" id="subtitle" title="CS231n Loss Functions and Optimization 02">
               
             </span>
 
@@ -172,8 +172,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-11-05 10:00" pubdate>
-        2020年11月5日 上午
+      <time datetime="2020-11-08 20:52" pubdate>
+        2020年11月8日 晚上
       </time>
     </span>
   
@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      75 字
+      473 字
     </span>
   
 
@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      9
        分钟
     </span>
   
@@ -224,50 +224,140 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Hello World</h1>
+            <h1 style="display: none">CS231n Loss Functions and Optimization 02</h1>
             
             <div class="markdown-body">
-              <h2 id="第一篇博客用以测试"><a href="#第一篇博客用以测试" class="headerlink" title="第一篇博客用以测试"></a>第一篇博客用以测试</h2><h3 id="一、-下面是一段C-代码"><a href="#一、-下面是一段C-代码" class="headerlink" title="一、 下面是一段C++代码"></a>一、 下面是一段C++代码</h3><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
-<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+              <h3 id="Preview-the-Goal-in-this-lecture"><a href="#Preview-the-Goal-in-this-lecture" class="headerlink" title="Preview the Goal in this lecture"></a>Preview the Goal in this lecture</h3><ol>
+<li>Define a loss function</li>
+<li>Come up with a way of finding the paras that minimize the (1)<br>(optimization)</li>
+</ol>
+<p><strong>The Remain Problem from last lecture</strong></p>
+<ul>
+<li>How to choose the W para ? </li>
+</ul>
+<p><img src="https://s1.ax1x.com/2020/11/08/BTZxgK.png" srcset="/CsBlog/img/loading.gif"></p>
+<h3 id="Loss-function"><a href="#Loss-function" class="headerlink" title="Loss function"></a>Loss function</h3><blockquote>
+<p>A loss function tells how good our current classifier is.</p>
+</blockquote>
+<p>$${(x_i,y_i)}_{i=1}^N$$</p>
+<p>The $X_i$ is image and the $y_i$ is label (int)</p>
+<p>The Total loss is defined as the func follows.</p>
+<p>$$L = \frac{1}{N}\sum\limits_iL_i(f(x_i,W),y_i)$$<br><em>Which is the sum of every single test’s loss</em></p>
+<hr>
+<h4 id="Muticlass-SVM-loss"><a href="#Muticlass-SVM-loss" class="headerlink" title="Muticlass SVM loss"></a><strong>Muticlass SVM loss</strong></h4><p>Given an example $(x_i,y_i)$ where $x_i$ is the image and where $y_i$ is the (int) label, using the shorthand for the score vec $s = f(x_i,W)$</p>
+<p>The SVM loss has the form:</p>
+<p><img src="https://s1.ax1x.com/2020/11/08/BTZ7B4.png" srcset="/CsBlog/img/loading.gif"></p>
+<blockquote>
+<p>if the incorrect score is smaller than the right score (x margin), we set the loss to 0.<br>in this case the safe margin is set to one<br><strong>Margin choice depends on our need</strong></p>
+</blockquote>
+<ul>
+<li>Then we loop the class</li>
+</ul>
+<p><img src="https://s1.ax1x.com/2020/11/08/BTZqE9.png" srcset="/CsBlog/img/loading.gif"></p>
+<p><img src="https://s1.ax1x.com/2020/11/08/BTZLNR.png" srcset="/CsBlog/img/loading.gif"></p>
+<ul>
+<li>What if we use</li>
+</ul>
+<p>$$L = \frac{1}{N}\sum\limits_iL_i(f(x_i,W),y_i)^2$$</p>
+<blockquote>
+<p>This is not a linear function and totally different, it’s may be useful sometimes depends on the way you care about the errors.</p>
+</blockquote>
+<h4 id="Example-Code"><a href="#Example-Code" class="headerlink" title="Example Code"></a>Example Code</h4><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">L_i_vectorized</span>(<span class="hljs-params">x, y, W</span>):</span>
+    scores = W.dot(x)
+    margins = np.maximun(<span class="hljs-number">0</span>, scores - scores[y] + margin)
+    margins[y] = <span class="hljs-number">0</span>
+    loss_i = np.<span class="hljs-built_in">sum</span>(margins)
+    <span class="hljs-keyword">return</span> loss_i
+    <span class="hljs-comment"># pretty easy</span></code></pre>
 
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>
-<span class="hljs-function"></span>&#123;
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;Hello World!&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
-&#125;</code></pre>
+<p><img src="https://s1.ax1x.com/2020/11/08/BTZO41.png" srcset="/CsBlog/img/loading.gif"></p>
+<blockquote>
+<p>It just change the gap bettween scores</p>
+</blockquote>
+<p><img src="https://s1.ax1x.com/2020/11/08/BTZzjO.png" srcset="/CsBlog/img/loading.gif"></p>
+<p><img src="https://s1.ax1x.com/2020/11/08/BTe9De.png" srcset="/CsBlog/img/loading.gif"></p>
+<blockquote>
+<p>often use L2 regularization just Euclid norm.</p>
+</blockquote>
+<p><img src="https://s1.ax1x.com/2020/11/08/BTepuD.png" srcset="/CsBlog/img/loading.gif"></p>
+<blockquote>
+<p>In this case the L1 and L2 reg is equal, but we can tell that L1 prefers the $w_1$ for it contains more zero, while the L2 prefers the $w_2$ for the weight is evenly spreaded through the test case.</p>
+</blockquote>
+<blockquote>
+<p>The Multiclass SVM loss just care about the gap bettween the right labels and the wrongs.</p>
+</blockquote>
+<h4 id="Softmax-Classifier"><a href="#Softmax-Classifier" class="headerlink" title="Softmax Classifier"></a><strong>Softmax Classifier</strong></h4><p><img src="https://s1.ax1x.com/2020/11/08/BTeiEd.png" srcset="/CsBlog/img/loading.gif"></p>
+<blockquote>
+<p>We just want to make the true probability closer to 1 (closer the better, eq is the best), so the loss func can be chosed by using the -log on the $P$.</p>
+</blockquote>
+<p><img src="https://s1.ax1x.com/2020/11/08/BTeCHH.png" srcset="/CsBlog/img/loading.gif"></p>
+<blockquote>
+<p>If we want to get the zero loss, the score may goes to inf! But Computer don’t like that.</p>
+</blockquote>
+<ul>
+<li>Debugging Way<br>outcomes might be $logC$</li>
+</ul>
+<hr>
+<p><img src="https://s1.ax1x.com/2020/11/08/BTek4I.png" srcset="/CsBlog/img/loading.gif"></p>
+<p><img src="https://s1.ax1x.com/2020/11/08/BTeECt.png" srcset="/CsBlog/img/loading.gif"></p>
+<hr>
+<h3 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h3><h4 id="Random-Search-The-Naive-but-Simplest-way"><a href="#Random-Search-The-Naive-but-Simplest-way" class="headerlink" title="Random Search - The Naive but Simplest way"></a>Random Search - The Naive but Simplest way</h4><blockquote>
+<p>Really Slow !!!</p>
+</blockquote>
+<h4 id="Gradient-Descent"><a href="#Gradient-Descent" class="headerlink" title="Gradient Descent"></a>Gradient Descent</h4><blockquote>
+<p>We just get the Gradient of W and go down to the bottom (maybe local best?)</p>
+</blockquote>
+<p><img src="https://s1.ax1x.com/2020/11/08/BTeFUA.png" srcset="/CsBlog/img/loading.gif"></p>
+<p><strong>Code</strong></p>
+<pre><code class="hljs python"><span class="hljs-comment"># Vanilla Gradient Descent</span>
 
-<h3 id="二、-下面是一段表格"><a href="#二、-下面是一段表格" class="headerlink" title="二、 下面是一段表格"></a>二、 下面是一段表格</h3><table>
-<thead>
-<tr>
-<th align="center">0</th>
-<th align="center">1</th>
-<th align="center">2</th>
-<th align="center">3</th>
-<th align="center">4</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">x</td>
-<td align="center">x</td>
-<td align="center">x</td>
-<td align="center">x</td>
-<td align="center">x</td>
-</tr>
-</tbody></table>
-<h3 id="三、-下面是一段-Latex"><a href="#三、-下面是一段-Latex" class="headerlink" title="三、 下面是一段 Latex"></a>三、 下面是一段 Latex</h3><p>$$E= mc^2$$</p>
-<h3 id="四、下面是一张图片"><a href="#四、下面是一张图片" class="headerlink" title="四、下面是一张图片"></a>四、下面是一张图片</h3><p><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRP-ciAYVH8UlH3ZaZC3NkN3ow9CrG36O5crg&usqp=CAU" srcset="/CsBlog/img/loading.gif"></p>
+<span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:
+    weight_grad = evaluate_gradient(loss_fun, data, weights)
+    weights += -step_size * weight_grad</code></pre>
+
+<p><strong>Step size is called elearning rate which is important</strong></p>
+<p><img src="https://s1.ax1x.com/2020/11/08/BTeV8P.png" srcset="/CsBlog/img/loading.gif"></p>
+<blockquote>
+<p>Since the N might be super large, we sample some sets called minibatch and use it to estimate the true gradient.</p>
+</blockquote>
+<p><img src="https://s1.ax1x.com/2020/11/08/BTeZgf.png" srcset="/CsBlog/img/loading.gif"></p>
+<hr>
+<p><img src="https://s1.ax1x.com/2020/11/08/BTenKS.png" srcset="/CsBlog/img/loading.gif"></p>
+<p><img src="https://s1.ax1x.com/2020/11/08/BTeuDg.png" srcset="/CsBlog/img/loading.gif"></p>
+<p><strong>Color Feature</strong><br><img src="https://s1.ax1x.com/2020/11/08/BTeQEj.png" srcset="/CsBlog/img/loading.gif"></p>
+<p><strong>Gradient</strong> <em>Extract the edge info</em><br><img src="https://s1.ax1x.com/2020/11/08/BTelUs.png" srcset="/CsBlog/img/loading.gif"></p>
+<p><strong>NLP?</strong><br><img src="https://s1.ax1x.com/2020/11/08/BTeG80.png" srcset="/CsBlog/img/loading.gif"></p>
+<blockquote>
+<p>clustering different image patches from images</p>
+</blockquote>
+<p><img src="https://s1.ax1x.com/2020/11/08/BTe15n.png" srcset="/CsBlog/img/loading.gif"></p>
+<ul>
+<li>Differences</li>
+</ul>
+<ol>
+<li>Extract the Feature at first and feed into the linear classificator</li>
+<li>Convolutional Neutral Network would learn the feature automatically during the training process.</li>
+</ol>
 
             </div>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/CsBlog/categories/CS231n/">CS231n</a>
+                    
+                  </div>
+                
                 
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/CsBlog/tags/Hexo/">Hexo</a>
+                      <a class="hover-with-bg" href="/CsBlog/tags/CV/">CV</a>
                     
-                      <a class="hover-with-bg" href="/CsBlog/tags/Fluid/">Fluid</a>
+                      <a class="hover-with-bg" href="/CsBlog/tags/Neural-Network/">Neural Network</a>
                     
                   </div>
                 
@@ -280,15 +370,21 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/CsBlog/2020/11/05/ICS_Lab1/">
+                      <a href="/CsBlog/2020/11/10/CS231n-03-Introduction-to-Convolutional-neural-network/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">ICS-Lab1 位运算</span>
+                        <span class="hidden-mobile">CS231n Introduction to Convolutional neural network 03</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/CsBlog/2020/11/07/CS231n_01_Image_Classification/">
+                        <span class="hidden-mobile">CS231n Image Classification 01</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
@@ -304,8 +400,8 @@
     <div id="disqus_thread"></div>
     <script type="text/javascript">
       var disqus_config = function() {
-        this.page.url = 'https://fdu2019xzy.github.io/CsBlog/2020/11/05/hello-world/';
-        this.page.identifier = '/CsBlog/2020/11/05/hello-world/';
+        this.page.url = 'https://fdu2019xzy.github.io/CsBlog/2020/11/08/CS231n_02_Loss-Functions-and-Optimization/';
+        this.page.identifier = '/CsBlog/2020/11/08/CS231n_02_Loss-Functions-and-Optimization/';
       };
       Fluid.utils.waitElementVisible('disqus_thread', function () {
         var d = document, s = d.createElement('script');

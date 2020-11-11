@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="Xzy">
   <meta name="keywords" content="">
-  <title>Hello World - Xavier&#39;s Blog</title>
+  <title>CS231n Image Classification 01 - Xavier&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
@@ -162,7 +162,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Hello World">
+            <span class="h2" id="subtitle" title="CS231n Image Classification 01">
               
             </span>
 
@@ -172,8 +172,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-11-05 10:00" pubdate>
-        2020年11月5日 上午
+      <time datetime="2020-11-07 22:11" pubdate>
+        2020年11月7日 晚上
       </time>
     </span>
   
@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      75 字
+      412 字
     </span>
   
 
@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      8
        分钟
     </span>
   
@@ -224,50 +224,145 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Hello World</h1>
+            <h1 style="display: none">CS231n Image Classification 01</h1>
             
             <div class="markdown-body">
-              <h2 id="第一篇博客用以测试"><a href="#第一篇博客用以测试" class="headerlink" title="第一篇博客用以测试"></a>第一篇博客用以测试</h2><h3 id="一、-下面是一段C-代码"><a href="#一、-下面是一段C-代码" class="headerlink" title="一、 下面是一段C++代码"></a>一、 下面是一段C++代码</h3><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
-<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+              <p><strong>Preface:</strong> This is the note of Stanford course CS231n, paving the way for my lab research.</p>
+<h1 id="Image-Classification"><a href="#Image-Classification" class="headerlink" title="Image Classification"></a>Image Classification</h1><p><em>A core task in Computer Vision</em></p>
+<hr>
+<h3 id="Computer’-Work"><a href="#Computer’-Work" class="headerlink" title="Computer’ Work"></a>Computer’ Work</h3><p>Input an image, and assign one of the label amoung the given labels.</p>
+<ul>
+<li><strong>The Problem:</strong> </li>
+</ul>
+<ol>
+<li>Semantic Gap</li>
+<li>Viewpoint variation</li>
+<li>illumination </li>
+<li>Deformation</li>
+<li>Occlusion</li>
+<li>Intraclass variation</li>
+</ol>
+<hr>
+<h3 id="An-image-classifier"><a href="#An-image-classifier" class="headerlink" title="An image classifier"></a>An image classifier</h3><blockquote>
+<p>Coding might be difficult </p>
+</blockquote>
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">classify_image</span>(<span class="hljs-params">image</span>):</span>
+    <span class="hljs-comment"># Do Some Magic</span>
+    <span class="hljs-keyword">return</span> class_label</code></pre>
 
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>
-<span class="hljs-function"></span>&#123;
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;Hello World!&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
-&#125;</code></pre>
+<ul>
+<li>Attmpts</li>
+</ul>
+<p><img src="https://s1.ax1x.com/2020/11/07/BIMSmD.png" srcset="/CsBlog/img/loading.gif"></p>
+<hr>
+<h3 id="Data-Driven-Approach"><a href="#Data-Driven-Approach" class="headerlink" title="Data-Driven Approach"></a>Data-Driven Approach</h3><ol>
+<li>Collect a dataset of images and labels</li>
+<li>Use Machine Learning to train a classifier</li>
+<li>Evaluate the classifier on new images</li>
+</ol>
+<ul>
+<li>First classifier: Nearest Neighbor</li>
+</ul>
+<p><em>Just Memorize all data and labels</em></p>
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">train</span>(<span class="hljs-params">images, labels</span>):</span>
+    <span class="hljs-comment"># Machine Learning!</span>
+    <span class="hljs-keyword">return</span> model</code></pre>
 
-<h3 id="二、-下面是一段表格"><a href="#二、-下面是一段表格" class="headerlink" title="二、 下面是一段表格"></a>二、 下面是一段表格</h3><table>
-<thead>
-<tr>
-<th align="center">0</th>
-<th align="center">1</th>
-<th align="center">2</th>
-<th align="center">3</th>
-<th align="center">4</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">x</td>
-<td align="center">x</td>
-<td align="center">x</td>
-<td align="center">x</td>
-<td align="center">x</td>
-</tr>
-</tbody></table>
-<h3 id="三、-下面是一段-Latex"><a href="#三、-下面是一段-Latex" class="headerlink" title="三、 下面是一段 Latex"></a>三、 下面是一段 Latex</h3><p>$$E= mc^2$$</p>
-<h3 id="四、下面是一张图片"><a href="#四、下面是一张图片" class="headerlink" title="四、下面是一张图片"></a>四、下面是一张图片</h3><p><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRP-ciAYVH8UlH3ZaZC3NkN3ow9CrG36O5crg&usqp=CAU" srcset="/CsBlog/img/loading.gif"></p>
+<p><em>Predict the label of the most similar training image</em></p>
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">predict</span>(<span class="hljs-params">model, test_images</span>):</span>
+    <span class="hljs-comment"># Use model to predict labels</span>
+    <span class="hljs-keyword">return</span> test_labels</code></pre>
+
+<p><strong>Example Dataset:</strong> CIFAR10</p>
+<p><img src="https://s1.ax1x.com/2020/11/07/BIM9TH.png" srcset="/CsBlog/img/loading.gif"></p>
+<blockquote>
+<p><strong>Issues:</strong> Although pics may seem visually similar, but still give lots of errors.</p>
+</blockquote>
+<hr>
+<ul>
+<li>Compare func used in it<h3 id="K-nearest-Neighbors-Method"><a href="#K-nearest-Neighbors-Method" class="headerlink" title="K nearest Neighbors Method"></a><strong>K nearest Neighbors Method</strong></h3></li>
+</ul>
+<p><strong>L1 distance:</strong> $d_1(I_1,I_2) = \sum\limits_{p} \mid I_1^p - I_2^p \mid$</p>
+<p><img src="https://s1.ax1x.com/2020/11/07/BIKXSx.png" srcset="/CsBlog/img/loading.gif"></p>
+<p><em>Minimize the sum given the most similar pics</em></p>
+<h4 id="BackWards"><a href="#BackWards" class="headerlink" title="BackWards"></a><strong>BackWards</strong></h4><p><img src="https://s1.ax1x.com/2020/11/07/BIKjl6.png" srcset="/CsBlog/img/loading.gif"></p>
+<h4 id="What-it-looks-like"><a href="#What-it-looks-like" class="headerlink" title="What it looks like"></a><strong>What it looks like</strong></h4><p><img src="https://s1.ax1x.com/2020/11/07/BIMp0e.png" srcset="/CsBlog/img/loading.gif"></p>
+<p><strong>Issues</strong></p>
+<ol>
+<li>Isolated Yellow Point</li>
+<li>Noisy of one single point (green into blue)</li>
+</ol>
+<p><strong>Use K Nearest Neighbors to Optimize it</strong><br><img src="https://s1.ax1x.com/2020/11/07/BIMitA.png" srcset="/CsBlog/img/loading.gif"></p>
+<hr>
+<p><em>A Better Cmp Func</em><br><strong>L2(Euclidean) distance:</strong> $d_1(I_1,I_2) = \sqrt{\sum\limits_{p}{(I_1^p - I_2^p)}^2}$</p>
+<p><img src="https://s1.ax1x.com/2020/11/07/BIMFfI.png" srcset="/CsBlog/img/loading.gif"></p>
+<blockquote>
+<p>The L1 Distance depends on the coordinate system, whenever there is a rotate, it would change the L1 Distance, while that won’t happen in the L2 Distance case (simply because it’s a circle)</p>
+</blockquote>
+<hr>
+<h4 id="Hyperparameters"><a href="#Hyperparameters" class="headerlink" title="Hyperparameters"></a><strong>Hyperparameters</strong></h4><ul>
+<li>What’s the best value of <strong>k</strong></li>
+<li>What’s the best <strong>distance</strong> to use? (L1,L2 or anything else)</li>
+</ul>
+<p><em>These things are preset rather than learn automatically from learning process</em></p>
+<p>This is <strong>Very problem-dependent</strong>, just try!, but How?</p>
+<p><img src="https://s1.ax1x.com/2020/11/07/BIME1P.png" srcset="/CsBlog/img/loading.gif"></p>
+<p><strong>Training &amp; Validation process should not mixed with the test data</strong></p>
+<ul>
+<li>Cross Validation</li>
+</ul>
+<p><img src="https://s1.ax1x.com/2020/11/07/BIMApt.png" srcset="/CsBlog/img/loading.gif"></p>
+<ul>
+<li>Validation process</li>
+</ul>
+<p><img src="https://s1.ax1x.com/2020/11/07/BIMV6f.png" srcset="/CsBlog/img/loading.gif"></p>
+<blockquote>
+<p>using the validation data to choose the best hyperparameters.</p>
+</blockquote>
+<p><img src="https://s1.ax1x.com/2020/11/07/BIMu7Q.png" srcset="/CsBlog/img/loading.gif"></p>
+<blockquote>
+<p>Cause we sum the offset, though the differences bettween pics and pics are various, they still got the same L2 distance, which is not so good.</p>
+</blockquote>
+<hr>
+<h3 id="Linear-Classification"><a href="#Linear-Classification" class="headerlink" title="Linear Classification"></a><strong>Linear Classification</strong></h3><ul>
+<li><strong>Parametric Model</strong><br><img src="https://s1.ax1x.com/2020/11/07/BIMZX8.png" srcset="/CsBlog/img/loading.gif"></li>
+</ul>
+<p>$$f(x,W) = Wx + b$$</p>
+<blockquote>
+<p>We need f(x,W) to be 10x1 and the x is actually 3072x1, so the W we input may be 10x3072, sometimes we add a bias to balance.</p>
+</blockquote>
+<p><img src="https://s1.ax1x.com/2020/11/07/BIMn0g.png" srcset="/CsBlog/img/loading.gif"></p>
+<p><img src="https://s1.ax1x.com/2020/11/07/BIMMkj.png" srcset="/CsBlog/img/loading.gif"></p>
+<blockquote>
+<p>It use a single line to separate the object based on its RGB info</p>
+</blockquote>
+<p>But how can we tell the quality of W ?<br>(View the next lecture)</p>
+<ul>
+<li><strong>Problems</strong><br><img src="https://s1.ax1x.com/2020/11/07/BIMQts.png" srcset="/CsBlog/img/loading.gif"></li>
+</ul>
+<blockquote>
+<p>Since it’s linear the Problems is obivious.</p>
+</blockquote>
 
             </div>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/CsBlog/categories/CS231n/">CS231n</a>
+                    
+                  </div>
+                
                 
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/CsBlog/tags/Hexo/">Hexo</a>
+                      <a class="hover-with-bg" href="/CsBlog/tags/CV/">CV</a>
                     
-                      <a class="hover-with-bg" href="/CsBlog/tags/Fluid/">Fluid</a>
+                      <a class="hover-with-bg" href="/CsBlog/tags/Neural-Network/">Neural Network</a>
                     
                   </div>
                 
@@ -280,15 +375,21 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/CsBlog/2020/11/05/ICS_Lab1/">
+                      <a href="/CsBlog/2020/11/08/CS231n_02_Loss-Functions-and-Optimization/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">ICS-Lab1 位运算</span>
+                        <span class="hidden-mobile">CS231n Loss Functions and Optimization 02</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/CsBlog/2020/11/06/ICS_Lab2/">
+                        <span class="hidden-mobile">ICS-Lab2 二进制炸弹</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
@@ -304,8 +405,8 @@
     <div id="disqus_thread"></div>
     <script type="text/javascript">
       var disqus_config = function() {
-        this.page.url = 'https://fdu2019xzy.github.io/CsBlog/2020/11/05/hello-world/';
-        this.page.identifier = '/CsBlog/2020/11/05/hello-world/';
+        this.page.url = 'https://fdu2019xzy.github.io/CsBlog/2020/11/07/CS231n_01_Image_Classification/';
+        this.page.identifier = '/CsBlog/2020/11/07/CS231n_01_Image_Classification/';
       };
       Fluid.utils.waitElementVisible('disqus_thread', function () {
         var d = document, s = d.createElement('script');
