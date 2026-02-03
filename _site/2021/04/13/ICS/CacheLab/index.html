@@ -1,0 +1,296 @@
+<!DOCTYPE html><html lang="zh-CN" data-default-color-scheme="&#34;auto&#34;"><head><meta charset="UTF-8"><link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png"><link rel="icon" type="image/png" href="/img/favicon.png"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="theme-color" content="#2f4154"><meta name="description" content=""><meta name="author" content="Ziyang Xie"><meta name="keywords" content=""><title>Cache Lab 理解高速缓存 - ZiYang&#39;s Blog</title><link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css"><link rel="stylesheet" href="/lib/hint/hint.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css"><link rel="stylesheet" href="/css/main.css"><script id="fluid-configs">var Fluid=window.Fluid||{},CONFIG={hostname:"xcraft.tech",root:"/",version:"1.8.5",typing:{enable:!0,typeSpeed:70,cursorChar:"_",loop:!1},toc:{enable:!0,headingSelector:"h1,h2,h3,h4,h5,h6",collapseDepth:0},anchorjs:{enable:!0,element:"h1,h2,h3,h4,h5,h6",placement:"right",visible:"hover",icon:""},copy_btn:!0,image_zoom:{enable:!0},lazyload:{enable:!0,onlypost:!1},web_analytics:{enable:!1,baidu:null,google:null,gtag:null,tencent:{sid:null,cid:null},woyaola:null,cnzz:null,leancloud:{app_id:null,app_key:null,server_url:null}}}</script><script src="/js/utils.js"></script><script src="/js/color-schema.js"></script><meta name="generator" content="Hexo 5.4.2"></head><body><header style="height:70vh"><nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar"><div class="container"><a class="navbar-brand" href="/">&nbsp;<strong>ZiYang-Xie's Blog</strong>&nbsp;</a> <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><div class="animated-icon"><span></span><span></span><span></span></div></button><div class="collapse navbar-collapse" id="navbarSupportedContent"><ul class="navbar-nav ml-auto text-center"><li class="nav-item"><a class="nav-link" href="/"><i class="iconfont icon-home-fill"></i> 首页</a></li><li class="nav-item"><a class="nav-link" href="/archives/"><i class="iconfont icon-archive-fill"></i> 归档</a></li><li class="nav-item"><a class="nav-link" href="/categories/"><i class="iconfont icon-category-fill"></i> 分类</a></li><li class="nav-item"><a class="nav-link" href="/tags/"><i class="iconfont icon-tags-fill"></i> 标签</a></li><li class="nav-item"><a class="nav-link" href="/about/"><i class="iconfont icon-user-fill"></i> 关于</a></li><li class="nav-item" id="search-btn"><a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i class="iconfont icon-search"></i>&nbsp;</a></li><li class="nav-item" id="color-toggle-btn"><a class="nav-link" href="javascript:">&nbsp;<i class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a></li></ul></div></div></nav><div class="banner intro-2" id="background" parallax="true" style="background:url(/img/bg_in.jpg) no-repeat center center;background-size:cover"><div class="full-bg-img"><div class="mask flex-center" style="background-color:rgba(0,0,0,.3)"><div class="page-header text-center fade-in-up"><span class="h2" id="subtitle" title="Cache Lab 理解高速缓存"></span><div class="mt-3"><span class="post-meta"><i class="iconfont icon-date-fill" aria-hidden="true"></i> <time datetime="2021-04-13 16:13" pubdate>2021年4月13日 下午</time></span></div><div class="mt-1"><span class="post-meta mr-2"><i class="iconfont icon-chart"></i> 4.3k 字 </span><span class="post-meta mr-2"><i class="iconfont icon-clock-fill"></i> 65 分钟</span></div></div></div></div></div></header><main><div class="container-fluid"><div class="row"><div class="d-none d-lg-block col-lg-2"></div><div class="col-lg-8 nopadding-md"><div class="container nopadding-md" id="board-ctn"><div class="py-5" id="board"><article class="post-content mx-auto"><h1 style="display:none">Cache Lab 理解高速缓存</h1><div class="markdown-body"><p><em>注：本实验报告为 CMU CSAPP CacheLab 实验报告</em></p><h2 id="一、实验简介"><a href="#一、实验简介" class="headerlink" title="一、实验简介"></a>一、实验简介</h2><p>​ Cache Lab实验主要在于帮助学生理解高速缓存的工作方式，以及如何针对Cache编写程序。实验主体总共分为两个部分</p><h3 id="PartA"><a href="#PartA" class="headerlink" title="PartA"></a><strong>PartA</strong></h3><p>编写一个Cache的模拟程序用以统计在L\S\M过程中Cache Hit\Miss\Eviction 的总数。</p><p>官方给出了 csim-ref 程序，我们需要编写代码实现其功能，输出 Hit/Miss/Eviction 的总数</p><pre><code class="hljs shell">Usage: ./csim-ref [-hv] -s &lt;num&gt; -E &lt;num&gt; -b &lt;num&gt; -t &lt;file&gt;
+Options:
+  -h         Print this help message.
+  -v         Optional verbose flag.
+  -s &lt;num&gt;   Number of set index bits.
+  -E &lt;num&gt;   Number of lines per set.
+  -b &lt;num&gt;   Number of block offset bits.
+  -t &lt;file&gt;  Trace file.
+
+Examples:
+<span class="hljs-meta">  linux&gt;</span><span class="bash">  ./csim-ref -s 4 -E 1 -b 4 -t traces/yi.trace</span>
+<span class="hljs-meta">  linux&gt;</span><span class="bash">  ./csim-ref -v -s 8 -E 2 -b 4 -t traces/yi.trace</span></code></pre><p><strong>测试方法：</strong></p><p>​ 使用 test-csim.c 进行测试，测试器会输出你的编译器和标准结果，并进行比较计算分数。</p><pre><code class="hljs shell">xzy@ubuntu:~/Desktop/ICSLAB/CacheLab$ ./test-csim 
+                        Your simulator     Reference simulator
+Points (s,E,b)    Hits  Misses  Evicts    Hits  Misses  Evicts
+     3 (1,1,1)       9       8       6       9       8       6  traces/yi2.trace
+     3 (4,2,4)       4       5       2       4       5       2  traces/yi.trace
+     3 (2,1,4)       2       3       1       2       3       1  traces/dave.trace
+     3 (2,1,3)     167      71      67     167      71      67  traces/trans.trace
+     3 (2,2,3)     201      37      29     201      37      29  traces/trans.trace
+     3 (2,4,3)     212      26      10     212      26      10  traces/trans.trace
+     3 (5,1,5)     231       7       0     231       7       0  traces/trans.trace
+     6 (5,1,5)  265189   21775   21743  265189   21775   21743  traces/long.trace
+    27
+
+TEST_CSIM_RESULTS=27</code></pre><h3 id="PartB"><a href="#PartB" class="headerlink" title="PartB"></a><strong>PartB</strong></h3><p>编写适应Cache的矩阵转置程序，使Cache的miss数尽量的小。</p><p>​ 给出总大小1kb，每个 block 为 32byte 的直接映射Cache</p><p>​ 共包含3个测试、分别为 32x32 \ 64x64 \ 61x67 大小的矩阵</p><p><strong>测试方法：</strong></p><p>​ 使用 test-trans.c 进行测试</p><pre><code class="hljs shell">Usage: ./test-trans [-h] -M &lt;rows&gt; -N &lt;cols&gt;
+Options:
+  -h          Print this help message.
+  -M &lt;rows&gt;   Number of matrix rows (max 256)
+  -N &lt;cols&gt;   Number of  matrix columns (max 256)
+Example: ./test-trans -M 8 -N 8</code></pre><hr><h2 id="二、实验内容"><a href="#二、实验内容" class="headerlink" title="二、实验内容"></a>二、实验内容</h2><h3 id="PartA-1"><a href="#PartA-1" class="headerlink" title="PartA"></a>PartA</h3><ul><li><strong>关于 Cache 的结构组成</strong></li></ul><p>​ 在 PartA 中我们需要在 csim.c 中编写模拟 Cache 运行的程序。学习过CSAPP第六章我们知道，Cache 的结构是由一行一个valid位，t个tag和一个长度为B的block组成的，总共分为多个Set，每个Set有E行。总共组成 Cache 大小 $C = B \times E \times S$ ( valid 和 tag 不计入 )</p><p><img src="https://tva1.sinaimg.cn/large/008eGmZEgy1gphwionzxcj30e30930t7.jpg" srcset="/img/loading.gif" alt></p><ul><li><p><strong>关于 Evict 机制</strong></p><p>同时由于采取 LRU 策略 （最近最少使用策略），我们需要维护一个 timestamp 来标记其访问时间的远近。可以一开始赋值 INF，然后逐渐减小，LRUstamp 最小的，就会被 Evict。</p></li></ul><p>由此我们确定了 Cache 的组成形式，我们一个 Line 由 valid 位，tag位，LRUstamp，和一个B字节的 Block 组成。由于是模拟Cache，所以其实DataBlock可以不编写，但是为了尽量模拟真实Cache，还是分配了Block的内存</p><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> </span>
+<span class="hljs-class">&#123;</span>
+    <span class="hljs-keyword">int</span> valid; <span class="hljs-comment">// 0/1 : invalid/valid</span>
+    <span class="hljs-keyword">int</span> tag;
+    <span class="hljs-keyword">int</span> LRUstamp; <span class="hljs-comment">// 越小代表越早使用，可以evict</span>
+    <span class="hljs-keyword">int</span>* Block; <span class="hljs-comment">// B（2^b） 字节</span>
+&#125; Line_t;</code></pre><pre><code class="hljs c"><span class="hljs-comment">// s个Set组成Cache</span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span>
+    <span class="hljs-keyword">int</span> S; <span class="hljs-comment">// Set 个数 (2^s)</span>
+    <span class="hljs-keyword">int</span> E; <span class="hljs-comment">// 每个 Set 中 Line 的数量</span>
+    <span class="hljs-keyword">int</span> B; <span class="hljs-comment">// Block 大小 (2^b)</span>
+    Line_t*** cache_;
+&#125; Cache_t;</code></pre><p>我在Cache中设置了S, E, B以方便管理Cache大小，不用每次传参，并编写对应设置函数。</p><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">initCache</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> s, <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> E, <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> b)</span> </span>
+<span class="hljs-function"></span>&#123;
+    Cache.S = (<span class="hljs-number">1</span> &lt;&lt; s), Cache.E = E, Cache.B = (<span class="hljs-number">1</span> &lt;&lt; b);
+&#125;</code></pre><ul><li><p><strong>关于内存管理</strong></p><p>之后便是编写函数来进行 Cache的内存分配和释放。这个没什么好说的，就是要养成分配完释放的好习惯，避免内存泄漏。</p><pre><code class="hljs c"><span class="hljs-comment">/* 分配 Cache */</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">mallocCache</span><span class="hljs-params">()</span></span>
+<span class="hljs-function"></span>&#123;
+    Cache.cache_ = (Line_t***)<span class="hljs-built_in">malloc</span>(Cache.S* <span class="hljs-keyword">sizeof</span>(Line_t **));
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; Cache.S; ++i)
+        Cache.cache_[i] = (Line_t **)<span class="hljs-built_in">malloc</span>(Cache.E * <span class="hljs-keyword">sizeof</span>(Line_t *));
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; Cache.S; ++i)
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; Cache.E; ++j)
+            Cache.cache_[i][j] = (Line_t *)<span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(Line_t));
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; Cache.S; ++i)
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; Cache.E; ++j) &#123;
+            Cache.cache_[i][j]-&gt;valid = <span class="hljs-number">0</span>;
+            Cache.cache_[i][j]-&gt;tag = <span class="hljs-number">0</span>;
+            Cache.cache_[i][j]-&gt;LRUstamp = <span class="hljs-number">1e9</span>;
+            Cache.cache_[i][j]-&gt;Block = (<span class="hljs-keyword">int</span> *)<span class="hljs-built_in">malloc</span>(Cache.B * <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">int</span>));
+        &#125;
+&#125;</code></pre><pre><code class="hljs c"><span class="hljs-comment">/* 释放 Cache */</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">freeCache</span><span class="hljs-params">()</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; Cache.S; ++i)
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; Cache.E; ++j)
+            <span class="hljs-built_in">free</span>(Cache.cache_[i][j]-&gt;Block);
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; Cache.S; ++i)
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; Cache.E; ++j)
+            <span class="hljs-built_in">free</span>(Cache.cache_[i][j]);
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; Cache.S; ++i)
+        <span class="hljs-built_in">free</span>(Cache.cache_[i]);
+    <span class="hljs-built_in">free</span>(Cache.cache_);
+&#125;</code></pre></li></ul><ul><li><p><strong>关于 getter 函数</strong></p><p>为了方便valid、tag等信息的查找，我编写了一系列getter函数。</p><pre><code class="hljs c"><span class="hljs-comment">/* 获得 Valid bit */</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getValid</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> s, <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> E)</span> </span>&#123;<span class="hljs-keyword">return</span> Cache.cache_[s][E]-&gt;valid;&#125;
+
+<span class="hljs-comment">/* 获得 Tag */</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getTag</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> s, <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> E)</span> </span>&#123;<span class="hljs-keyword">return</span> Cache.cache_[s][E]-&gt;tag;&#125;
+
+<span class="hljs-comment">/* 获得LRUstamp */</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getLRU</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> s, <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> E)</span> </span>&#123;<span class="hljs-keyword">return</span> Cache.cache_[s][E]-&gt;LRUstamp;&#125;</code></pre></li></ul><ul><li><p><strong>对于Hit和Miss的判定</strong></p><p>判定hit和miss，就是在Cache对应Set中对比valid和tag，如果valid为1标明有效，并且tag相同，则说明Hit，不然则Miss。</p><pre><code class="hljs c"><span class="hljs-comment">/* 查看是否命中 */</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">HitOrMiss</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> s, <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> tag)</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; Cache.E; ++i)
+        <span class="hljs-keyword">if</span>(getValid(s, i) &amp;&amp; getTag(s, i) == tag)
+            <span class="hljs-keyword">return</span> i; <span class="hljs-comment">// 命中</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; <span class="hljs-comment">// Miss </span>
+&#125;</code></pre></li></ul><ul><li><p><strong>关于是否Evict</strong></p><p>根据上文，我们知道我们采取LRU的evict策略，那么在写的时候，如果valid位为1，而tag不一致发生写miss的情况，就要进行evict。evict的位置是LRUstamp最小的那一个。我们维护LRUstamp，在每次操作时，将其赋值为INF (1e9) 并将其余的LRUstamp减1，取最小的 LRUstamp 进行evict，用最新的 tag 和 数据 进行替换</p></li></ul><pre><code class="hljs c"><span class="hljs-comment">/* 更新LRU，越小越早使用 */</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">lruUpdate</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> s, <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> E)</span></span>
+<span class="hljs-function"></span>&#123;
+    Cache.cache_[s][E]-&gt;LRUstamp = <span class="hljs-number">1e9</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; Cache.E; ++i)
+    &#123;
+        <span class="hljs-keyword">if</span>(i != E)
+            Cache.cache_[s][i]-&gt;LRUstamp--;
+    &#125;
+&#125;
+
+<span class="hljs-comment">/* 更新Cache */</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">WriteCache</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> s, <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> E, <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> tag)</span></span>
+<span class="hljs-function"></span>&#123;
+    Eviction(s, E, tag);
+    Cache.cache_[s][E]-&gt;valid = <span class="hljs-number">1</span>;
+    Cache.cache_[s][E]-&gt;tag = tag;
+    lruUpdate(s, E);
+&#125;</code></pre><ul><li>关于模拟Cache</li></ul><p>最后进行Cache的模拟，如果Hit了就值更新LRUstamp，Miss了就获取EvictionPose，并将其替换。</p><pre><code class="hljs c"><span class="hljs-comment">/* 模拟Cache，获得 Hit 和 Miss 的次数 */</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">getAns</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> s, <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> tag)</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-keyword">int</span> hit_flag = HitOrMiss(s, tag);
+    <span class="hljs-keyword">if</span>(hit_flag != <span class="hljs-number">-1</span>) &#123; <span class="hljs-comment">// Hit</span>
+        Hit++;
+        <span class="hljs-keyword">if</span>(verbose)
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;hit &quot;</span>);
+        lruUpdate(s, hit_flag);
+    &#125;
+    <span class="hljs-keyword">else</span>  &#123;
+        Miss++;
+        <span class="hljs-keyword">if</span>(verbose)
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;miss &quot;</span>);
+        WriteCache(s, getEvictPos(s), tag);
+    &#125;
+&#125;</code></pre><p>最后完整代码，附于提交 <code>csim.c</code> 中</p><ul><li>完成通过</li></ul><pre><code class="hljs c">Your simulator     Reference simulator
+Points (s,E,b)    Hits  Misses  Evicts    Hits  Misses  Evicts
+     <span class="hljs-number">3</span> (<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>)       <span class="hljs-number">9</span>       <span class="hljs-number">8</span>       <span class="hljs-number">6</span>       <span class="hljs-number">9</span>       <span class="hljs-number">8</span>       <span class="hljs-number">6</span>  traces/yi2.trace
+     <span class="hljs-number">3</span> (<span class="hljs-number">4</span>,<span class="hljs-number">2</span>,<span class="hljs-number">4</span>)       <span class="hljs-number">4</span>       <span class="hljs-number">5</span>       <span class="hljs-number">2</span>       <span class="hljs-number">4</span>       <span class="hljs-number">5</span>       <span class="hljs-number">2</span>  traces/yi.trace
+     <span class="hljs-number">3</span> (<span class="hljs-number">2</span>,<span class="hljs-number">1</span>,<span class="hljs-number">4</span>)       <span class="hljs-number">2</span>       <span class="hljs-number">3</span>       <span class="hljs-number">1</span>       <span class="hljs-number">2</span>       <span class="hljs-number">3</span>       <span class="hljs-number">1</span>  traces/dave.trace
+     <span class="hljs-number">3</span> (<span class="hljs-number">2</span>,<span class="hljs-number">1</span>,<span class="hljs-number">3</span>)     <span class="hljs-number">167</span>      <span class="hljs-number">71</span>      <span class="hljs-number">67</span>     <span class="hljs-number">167</span>      <span class="hljs-number">71</span>      <span class="hljs-number">67</span>  traces/trans.trace
+     <span class="hljs-number">3</span> (<span class="hljs-number">2</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>)     <span class="hljs-number">201</span>      <span class="hljs-number">37</span>      <span class="hljs-number">29</span>     <span class="hljs-number">201</span>      <span class="hljs-number">37</span>      <span class="hljs-number">29</span>  traces/trans.trace
+     <span class="hljs-number">3</span> (<span class="hljs-number">2</span>,<span class="hljs-number">4</span>,<span class="hljs-number">3</span>)     <span class="hljs-number">212</span>      <span class="hljs-number">26</span>      <span class="hljs-number">10</span>     <span class="hljs-number">212</span>      <span class="hljs-number">26</span>      <span class="hljs-number">10</span>  traces/trans.trace
+     <span class="hljs-number">3</span> (<span class="hljs-number">5</span>,<span class="hljs-number">1</span>,<span class="hljs-number">5</span>)     <span class="hljs-number">231</span>       <span class="hljs-number">7</span>       <span class="hljs-number">0</span>     <span class="hljs-number">231</span>       <span class="hljs-number">7</span>       <span class="hljs-number">0</span>  traces/trans.trace
+     <span class="hljs-number">6</span> (<span class="hljs-number">5</span>,<span class="hljs-number">1</span>,<span class="hljs-number">5</span>)  <span class="hljs-number">265189</span>   <span class="hljs-number">21775</span>   <span class="hljs-number">21743</span>  <span class="hljs-number">265189</span>   <span class="hljs-number">21775</span>   <span class="hljs-number">21743</span>  traces/<span class="hljs-keyword">long</span>.trace
+    <span class="hljs-number">27</span></code></pre><hr><h3 id="PartB-1"><a href="#PartB-1" class="headerlink" title="PartB"></a>PartB</h3><p>​ 在完成了Cache基本的组织架构之后，我们现在要开始编写Cache友好的程序，以矩阵转置为例。源代码中包含一个最naive的矩阵转置，也是我们平常经常写的。</p><pre><code class="hljs c"><span class="hljs-comment">/* </span>
+<span class="hljs-comment"> * trans - A simple baseline transpose function, not optimized for the cache.</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-keyword">char</span> trans_desc[] = <span class="hljs-string">&quot;Simple row-wise scan transpose&quot;</span>;
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">trans</span><span class="hljs-params">(<span class="hljs-keyword">int</span> M, <span class="hljs-keyword">int</span> N, <span class="hljs-keyword">int</span> A[N][M], <span class="hljs-keyword">int</span> B[M][N])</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-keyword">int</span> i, j, tmp;
+
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; N; i++) &#123;
+        <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; M; j++) &#123;
+            tmp = A[i][j];
+            B[j][i] = tmp;
+        &#125;
+    &#125;    
+&#125;</code></pre><p>测试之后会发现，对于4x4的矩阵，其miss次数有22次之多</p><pre><code class="hljs shell">func 1 (Simple row-wise scan transpose): hits:15, misses:22, evictions:19</code></pre><p><img src="https://tva1.sinaimg.cn/large/008eGmZEgy1gphxvxlx02j312d0iw40v.jpg" srcset="/img/loading.gif" style="zoom:50%"></p><p>我们可以发现，对于4x4的矩阵，由于Block大小是32bytes且为直接映射Cache，所以每8个int会在同一个Block/Set当中，4x4的矩阵被分在两个不同的 Block 中，对于A矩阵的访问是行优先的，而B矩阵的访问是列优先的。我们可以模拟这个过程</p><blockquote><p>访问到 $A<em>{00}$ Cache cold miss，将 $B</em>{A_{1}}$ 加入 Cache 中</p><p>访问到 $B<em>{00}$ 由于B和A有相同的组索引，所以导致相对位置相同的地方被映射到Cache的同一组中，造成tag不一致，产生miss将会把之前Load到Cache里的A进行驱逐，将 $B</em>{A<em>{1}}$ 驱逐 将 $B</em>{B_{1}}$ 加入 Cache 中</p><p>访问到 $A<em>{01}$ 同理，将 $B</em>{B<em>{1}}$ 驱逐 将 $B</em>{A_{1}}$ 加入 Cache 中</p><p>之后 $B<em>{B</em>{2}}$ 和 $B<em>{A</em>{1}}$ 很幸运能够不产生thrash，有几次Cache hit，但是大部分情况下，还是会发生如同上面所描述的抖动。</p></blockquote><p>因此，对于这种情况，我们应该如何修改代码，使其适应Cache，能够尽可能少的Miss呢？</p><ul><li><p><strong>暴力方法</strong></p><p>有一种最暴力的方式，就是考虑到目前矩阵的大小比较小，所以我们可以采取定义8个局部变量的方法，一次性将一个Block全部Load到寄存器中，然后再进行转置，这样就不会发生如上面所描述的 Cache thrash。</p><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">transpose_4x4</span><span class="hljs-params">(<span class="hljs-keyword">int</span> M, <span class="hljs-keyword">int</span> N, <span class="hljs-keyword">int</span> A[N][M], <span class="hljs-keyword">int</span> B[M][N])</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-keyword">int</span> tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+
+	<span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> x = <span class="hljs-number">0</span>; x &lt; <span class="hljs-number">3</span>; x += <span class="hljs-number">2</span>)
+	&#123;
+		tmp0 = A[x][<span class="hljs-number">0</span>], tmp1 = A[x][<span class="hljs-number">1</span>], tmp2 = A[x][<span class="hljs-number">2</span>], tmp3 = A[x][<span class="hljs-number">3</span>];
+		tmp4 = A[x + <span class="hljs-number">1</span>][<span class="hljs-number">0</span>], tmp5 = A[x + <span class="hljs-number">1</span>][<span class="hljs-number">1</span>], tmp6 = A[x + <span class="hljs-number">1</span>][<span class="hljs-number">2</span>], tmp7 = A[x + <span class="hljs-number">1</span>][<span class="hljs-number">3</span>];
+
+		B[<span class="hljs-number">0</span>][x] = tmp0, B[<span class="hljs-number">1</span>][x] = tmp1, B[<span class="hljs-number">2</span>][x] = tmp2, B[<span class="hljs-number">3</span>][x] = tmp3; 
+		B[<span class="hljs-number">0</span>][x + <span class="hljs-number">1</span>] = tmp4, B[<span class="hljs-number">1</span>][x + <span class="hljs-number">1</span>] = tmp5, B[<span class="hljs-number">2</span>][x + <span class="hljs-number">1</span>] = tmp6, B[<span class="hljs-number">3</span>][x + <span class="hljs-number">1</span>] = tmp7; 
+	&#125;
+&#125;</code></pre><pre><code class="hljs apache"><span class="hljs-attribute">func</span> <span class="hljs-number">0</span> (Transpose submission): hits:<span class="hljs-number">29</span>, misses:<span class="hljs-number">8</span>, evictions:<span class="hljs-number">6</span></code></pre><p>可以看到miss降到了8，有极大的改进，我们用partA中写的csim进行分析。</p><pre><code class="hljs shell">xzy@ubuntu:~/Desktop/ICSLAB/CacheLab$ ./csim -v -s 5 -E 1 -b 5 -t trace.f0
+S 18e08c,1 miss #系统miss
+L 18e0a0,8 miss #系统miss
+L 18e084,4 hit 
+L 18e080,4 hit 
+L 10e080,4 miss eviction 
+L 10e084,4 hit 
+L 10e088,4 hit 
+L 10e08c,4 hit 
+L 10e090,4 hit 
+L 10e094,4 hit 
+L 10e098,4 hit 
+L 10e09c,4 hit 
+S 14e080,4 miss eviction 
+S 14e090,4 hit 
+S 14e0a0,4 miss eviction # 多一次miss
+S 14e0b0,4 hit 
+S 14e084,4 hit 
+S 14e094,4 hit 
+S 14e0a4,4 hit 
+S 14e0b4,4 hit 
+L 10e0a0,4 miss eviction 
+L 10e0a4,4 hit 
+L 10e0a8,4 hit 
+L 10e0ac,4 hit 
+L 10e0b0,4 hit 
+L 10e0b4,4 hit 
+L 10e0b8,4 hit 
+L 10e0bc,4 hit 
+S 14e088,4 hit 
+S 14e098,4 hit 
+S 14e0a8,4 miss eviction 
+S 14e0b8,4 hit 
+S 14e08c,4 hit 
+S 14e09c,4 hit 
+S 14e0ac,4 hit 
+S 14e0bc,4 hit 
+S 18e08d,1 miss eviction #系统miss
+hits:29 misses:8 evictions:6</code></pre><p>可以看到除了前后3次系统固定的miss之外，距离理论下限4次还有1次，这一次发生在Store矩阵B的时候，由于B是列优先，所以在访问到$B<em>{B</em>{2}}$的时候会多发生一次miss。</p><h4 id="32x32-矩阵转置"><a href="#32x32-矩阵转置" class="headerlink" title="32x32 矩阵转置"></a>32x32 矩阵转置</h4></li></ul><p>​ 了解了之后我们来看32x32的矩阵转置，其正好是Cache 1kb的总大小，能够全部装进Cache。所以我们需要避免的就是连续在A,B</p><p>之间切换访问相对位置相同的区域（映射到同一个Block）从而导致的Cache thrash。</p><p><img src="https://tva1.sinaimg.cn/large/008eGmZEgy1gpi2azu5g2j31dl0qz42z.jpg" srcset="/img/loading.gif" style="zoom:50%"></p><p>我们可以采取 8*8分块的方式，对于每一块中每一行属于同一个Block，经过8x8分块后我们发现，除了对角线的分块之外，其他分块的A、B互不影响，不会产生thrash。</p><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">transpose_32x32</span><span class="hljs-params">(<span class="hljs-keyword">int</span> M, <span class="hljs-keyword">int</span> N, <span class="hljs-keyword">int</span> A[N][M], <span class="hljs-keyword">int</span> B[M][N])</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-keyword">int</span> i, j, x, y;
+		<span class="hljs-keyword">int</span> tmp;
+  
+    <span class="hljs-keyword">for</span>(i = <span class="hljs-number">0</span>; i &lt; N; i += <span class="hljs-number">8</span>)
+        <span class="hljs-keyword">for</span>(j = <span class="hljs-number">0</span>; j &lt; M; j += <span class="hljs-number">8</span>)
+          <span class="hljs-keyword">for</span>(x = i; x &lt; i + <span class="hljs-number">8</span>; ++x)
+              <span class="hljs-keyword">for</span>(y = j; y &lt; j + <span class="hljs-number">8</span>; ++y)
+              &#123;
+                tmp = A[x][y], B[y][x] = tmp;
+              &#125;
+  <span class="hljs-comment">/*</span>
+<span class="hljs-comment">    注意，这里应该学习示例程序中的 tmp = A[x][y], B[y][x] = tmp; </span>
+<span class="hljs-comment">    因为我们无法确定调用者是否会使A，B指向内存中的同一块区域从而造成意想不到的后果。</span>
+<span class="hljs-comment">  */</span>
+&#125;</code></pre><pre><code class="hljs shell">func 0 (Transpose submission): hits:1735, misses:350, evictions:318 	# 8x8 分块
+func 1 (Simple row-wise scan transpose): hits:870, misses:1183, evictions:1151	# Naive</code></pre><p>可以看到相比于最初naive的版本1183miss，已经有了极大的改善，但是还是没有达到要求的小于300miss。</p><p>我们可以发现，除对角线之外的分块已经达到miss的下限，所以对角线是需要解决的地方。对于对角线上的分块，我们的处理和Naive方式没有什么区别，都会造成thrash。</p><p>有了前面4x4矩阵的铺垫，我们已经知道了应该如何处理这类情况，我们按照之前的解决方法类似解决。</p><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">transpose_32x32</span><span class="hljs-params">(<span class="hljs-keyword">int</span> M, <span class="hljs-keyword">int</span> N, <span class="hljs-keyword">int</span> A[N][M], <span class="hljs-keyword">int</span> B[M][N])</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-keyword">int</span> i, j, x, y;
+    <span class="hljs-keyword">int</span> tmp, tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+
+    <span class="hljs-keyword">for</span>(i = <span class="hljs-number">0</span>; i &lt; N; i += <span class="hljs-number">8</span>)
+        <span class="hljs-keyword">for</span>(j = <span class="hljs-number">0</span>; j &lt; M; j += <span class="hljs-number">8</span>)
+			<span class="hljs-keyword">for</span>(x = i; x &lt; i + <span class="hljs-number">8</span>; ++x)
+			&#123;
+				<span class="hljs-keyword">if</span>(i == j)
+				&#123;
+					tmp0 = A[x][j], tmp1 = A[x][j + <span class="hljs-number">1</span>], tmp2 = A[x][j + <span class="hljs-number">2</span>], tmp3 = A[x][j + <span class="hljs-number">3</span>];
+					tmp4 = A[x][j + <span class="hljs-number">4</span>], tmp5 = A[x][j + <span class="hljs-number">5</span>], tmp6 = A[x][j + <span class="hljs-number">6</span>], tmp7 = A[x][j + <span class="hljs-number">7</span>];
+
+					B[j][x] = tmp0, B[j + <span class="hljs-number">1</span>][x] = tmp1, B[j + <span class="hljs-number">2</span>][x] = tmp2, B[j + <span class="hljs-number">3</span>][x] = tmp3; 
+					B[j + <span class="hljs-number">4</span>][x] = tmp4, B[j + <span class="hljs-number">5</span>][x] = tmp5, B[j + <span class="hljs-number">6</span>][x] = tmp6, B[j + <span class="hljs-number">7</span>][x] = tmp7; 
+				&#125;
+				<span class="hljs-keyword">else</span> 
+				&#123;
+					<span class="hljs-keyword">for</span>(y = j; y &lt; j + <span class="hljs-number">8</span>; ++y)
+					&#123;
+						tmp = A[x][y], B[y][x] = tmp;
+					&#125;
+				&#125;
+			&#125;
+&#125;</code></pre><pre><code class="hljs apache"><span class="hljs-attribute">func</span> <span class="hljs-number">0</span> (Transpose submission): hits:<span class="hljs-number">1766</span>, misses:<span class="hljs-number">287</span>, evictions:<span class="hljs-number">255</span></code></pre><p>​ 成功将miss降到了287。实际的理论下限是256，我们注意到这种操作方式A矩阵的miss已经达到了下限，而B矩阵的对角线还是会固定miss。这是因为在Load A之前，B矩阵的对角线行已经被前一个转置Load进去，所以会被evict掉，再次调用时就会产生一次Miss。所以我们可以对其进行展开，最后可以做到259次的miss（3次系统miss）由于代码可读性太低，这里不做展开。</p><hr><h4 id="64x64矩阵转置"><a href="#64x64矩阵转置" class="headerlink" title="64x64矩阵转置"></a>64x64矩阵转置</h4><p>​ 对于64x64矩阵转置，我们注意到其已经超过了Cache的大小，我们首先用8分块尝试一下。</p><pre><code class="hljs shell">func 0 (Transpose submission): hits:3586, misses:4611, evictions:4579 # 8分块
+func 1 (Simple row-wise scan transpose): hits:3474, misses:4723, evictions:4691 # naive</code></pre><p>发现没有什么改进，这是什么原因？我们从Cache大小的角度出发</p><p><img src="https://tva1.sinaimg.cn/large/008eGmZEgy1gpi5dme0pcj31ok0tnteo.jpg" srcset="/img/loading.gif" alt></p><p>我们进行4x4分块试验一下</p><pre><code class="hljs c"><span class="hljs-keyword">int</span> i, j, x, y;
+    <span class="hljs-keyword">int</span> tmp, tmp0, tmp1, tmp2, tmp3;
+
+    <span class="hljs-keyword">for</span>(i = <span class="hljs-number">0</span>; i &lt; N; i += <span class="hljs-number">4</span>)
+        <span class="hljs-keyword">for</span>(j = <span class="hljs-number">0</span>; j &lt; M; j += <span class="hljs-number">4</span>)
+			<span class="hljs-keyword">for</span>(x = i; x &lt; i + <span class="hljs-number">4</span>; ++x)
+			&#123;
+				<span class="hljs-keyword">if</span>(i == j)
+				&#123;
+					tmp0 = A[x][j], tmp1 = A[x][j + <span class="hljs-number">1</span>], tmp2 = A[x][j + <span class="hljs-number">2</span>], tmp3 = A[x][j + <span class="hljs-number">3</span>];
+
+					B[j][x] = tmp0, B[j + <span class="hljs-number">1</span>][x] = tmp1, B[j + <span class="hljs-number">2</span>][x] = tmp2, B[j + <span class="hljs-number">3</span>][x] = tmp3; 
+				&#125;
+				<span class="hljs-keyword">else</span> 
+				&#123;
+					<span class="hljs-keyword">for</span>(y = j; y &lt; j + <span class="hljs-number">4</span>; ++y)
+					&#123;
+						tmp = A[x][y], B[y][x] = tmp;
+					&#125;
+				&#125;
+			&#125;</code></pre><pre><code class="hljs shell">func 0 (Transpose submission): hits:6402, misses:1795, evictions:1763</code></pre><p>​ 可以看到结果好了很多，但是还是没能达到1300的要求。其原因其实还是在最开始讲的4x4分块的例子中，由于B矩阵是按列访问，在4x4分块之后，访问对角两块的时候，会每一块都会各产生2次miss，有一个小的thrash。</p><p><img src="https://tva1.sinaimg.cn/large/008eGmZEgy1gpi5iw1wfdj31or0tj0vq.jpg" srcset="/img/loading.gif" style="zoom:33%"></p><p>​ 对自己电脑寄存器数量有自信的选手可能会选择开16个临时变量来一次性完成转置，但那样太过粗暴而不稳定。我们想是否有什么办法能够使4x4区域中的miss次数降低到1次？我们回去考虑8x8的分块情况。</p><p><img src="https://tva1.sinaimg.cn/large/008eGmZEgy1gpi5pdjqnuj31tk0laq79.jpg" srcset="/img/loading.gif" alt></p><ul><li><p><strong>对于A矩阵</strong></p><p>我们的策略是一次load掉4行的内容，以防多次访问</p></li><li><p><strong>对于B矩阵</strong></p><p>我们发现，其实对于2、3两块分块，如果在2处出现miss，那么3其实也被加入了Cache不会发生miss，所以就有了如下策略。</p></li></ul><p><strong>解决方案：</strong></p><p><img src="https://tva1.sinaimg.cn/large/008eGmZEgy1gpi5wquog6j30vb0t4jtx.jpg" srcset="/img/loading.gif" style="zoom:25%"></p><ol><li><p>我们可以先一次性Load A1、A2两块到B1、B2两块中，这样只会1次miss。</p></li><li><p>我们按行将A3转置到B2中， 再将B2中原来放置的A2转置到A3中 (B2 Hit -&gt; B3 miss -&gt;下次B2 miss之后 B2、B3在Cache中便不会miss了) 共2次miss</p></li><li>之后再将A4转置到B4中，这样会miss1次</li></ol><p>总共miss4次，这样一来对于8x8 的 B矩阵，相当于每个4x4只miss了一次，完成了要求。</p><p><em>&lt; 代码太长见附件 &gt;</em></p><p>测试一下，效果拔群！</p><pre><code class="hljs apache"><span class="hljs-attribute">func</span> <span class="hljs-number">0</span> (Transpose submission): hits:<span class="hljs-number">9082</span>, misses:<span class="hljs-number">1163</span>, evictions:<span class="hljs-number">1131</span></code></pre><hr><h4 id="61x67矩阵"><a href="#61x67矩阵" class="headerlink" title="61x67矩阵"></a>61x67矩阵</h4><p>对于这类非方阵，我们采用最简单的分块策略进行测试。</p><div class="table-container"><table><thead><tr><th style="text-align:center"></th><th style="text-align:center">4x4</th><th style="text-align:center">8x8</th><th style="text-align:center">16x16</th><th style="text-align:center">17x17</th></tr></thead><tbody><tr><td style="text-align:center">miss数</td><td style="text-align:center">2425</td><td style="text-align:center">2118</td><td style="text-align:center">1992</td><td style="text-align:center">1950</td></tr></tbody></table></div><p>个人测试了 4x4 \ 8x8 \ 16x16 发现16x16可以满足miss数小于 2k 的要求。参考网上资料[1]后，发现 17x17是最优选择，miss数为1950</p><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">transpose_61x67</span><span class="hljs-params">(<span class="hljs-keyword">int</span> M, <span class="hljs-keyword">int</span> N, <span class="hljs-keyword">int</span> A[N][M], <span class="hljs-keyword">int</span> B[M][N])</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-keyword">int</span> i, j, x, y, tmp;
+
+    <span class="hljs-keyword">for</span>(i = <span class="hljs-number">0</span>; i &lt; N; i += <span class="hljs-number">17</span>)
+        <span class="hljs-keyword">for</span>(j = <span class="hljs-number">0</span>; j &lt; M; j += <span class="hljs-number">17</span>)
+			<span class="hljs-keyword">for</span>(x = i; x &lt; N &amp;&amp; x &lt; i + <span class="hljs-number">17</span>; ++x)
+				<span class="hljs-keyword">for</span>(y = j; y &lt; M &amp;&amp; y &lt; j + <span class="hljs-number">17</span>; ++y)
+				&#123;
+					tmp = A[x][y];
+					B[y][x] = tmp; 
+				&#125;		
+&#125;</code></pre><hr><h2 id="三、实验结论"><a href="#三、实验结论" class="headerlink" title="三、实验结论"></a>三、实验结论</h2><p>最后我们运行 <code>drive.py</code> 来测试我们的总分</p><pre><code class="hljs shell">Part A: Testing cache simulator
+Running ./test-csim
+                        Your simulator     Reference simulator
+Points (s,E,b)    Hits  Misses  Evicts    Hits  Misses  Evicts
+     3 (1,1,1)       9       8       6       9       8       6  traces/yi2.trace
+     3 (4,2,4)       4       5       2       4       5       2  traces/yi.trace
+     3 (2,1,4)       2       3       1       2       3       1  traces/dave.trace
+     3 (2,1,3)     167      71      67     167      71      67  traces/trans.trace
+     3 (2,2,3)     201      37      29     201      37      29  traces/trans.trace
+     3 (2,4,3)     212      26      10     212      26      10  traces/trans.trace
+     3 (5,1,5)     231       7       0     231       7       0  traces/trans.trace
+     6 (5,1,5)  265189   21775   21743  265189   21775   21743  traces/long.trace
+    27
+
+
+Part B: Testing transpose function
+Running ./test-trans -M 32 -N 32
+Running ./test-trans -M 64 -N 64
+Running ./test-trans -M 61 -N 67
+
+Cache Lab summary:
+                        Points   Max pts      Misses
+Csim correctness          27.0        27
+Trans perf 32x32           8.0         8         287
+Trans perf 64x64           8.0         8        1163
+Trans perf 61x67          10.0        10        1950
+          Total points    53.0        53</code></pre><p>满分 53.0/53</p><h2 id="四、参考资料"><a href="#四、参考资料" class="headerlink" title="四、参考资料"></a>四、参考资料</h2><p>[1] <em>Computer Systems: A Programmer’s Perspective</em>, 3/E (CS:APP3e). Randal E. Bryant and David R. O’Hallaron, Carnegie Mellon University</p><p>[2] <a target="_blank" rel="noopener" href="https://blog.csdn.net/xbb224007/article/details/81103995">https://blog.csdn.net/xbb224007/article/details/81103995</a></p></div><hr><div><div class="post-metas mb-3"><div class="post-meta mr-3"><i class="iconfont icon-category"></i> <a class="hover-with-bg" href="/categories/ICS/">ICS</a></div><div class="post-meta"><i class="iconfont icon-tags"></i> <a class="hover-with-bg" href="/tags/Cache/">Cache</a></div></div><p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p><div class="post-prevnext row"><article class="post-prev col-6"><a href="/2021/05/21/ICS/Dynamic%20Memory%20Allocation/"><i class="iconfont icon-arrowleft"></i> <span class="hidden-mobile">Linux 动态内存分配机制详解</span> <span class="visible-mobile">上一篇</span></a></article><article class="post-next col-6"><a href="/2021/03/22/Readelf/"><span class="hidden-mobile">ELF头简介</span> <span class="visible-mobile">下一篇</span> <i class="iconfont icon-arrowright"></i></a></article></div></div><article class="comments" id="comments"><div id="gitalk-container"></div><script type="text/javascript">Fluid.utils.waitElementVisible("gitalk-container",(function(){Fluid.utils.createCssLink("/css/gitalk.css"),Fluid.utils.createScript("https://cdn.staticfile.org/gitalk/1.7.0/gitalk.min.js",(function(){new Gitalk({clientID:"bb132e59582b2e328abc",clientSecret:"884bfc0ac692d040744d5e4b81ffd6f1aa95cbc0",repo:"CsBlog",owner:"ZiYang-xie",admin:["ZiYang-xie"],id:"37897655720e7d8254e3d3c3d1bd1444",language:"zh-CN",labels:["Gitalk"],perPage:10,pagerDirection:"last",createIssueManually:!0,distractionFreeMode:!1}).render("gitalk-container")}))}))</script><noscript>Please enable JavaScript to view the comments</noscript></article></article></div></div></div><div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn"><div id="toc"><p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p><div class="toc-body" id="toc-body"></div></div></div></div></div><a id="scroll-top-button" href="#" role="button"><i class="iconfont icon-arrowup" aria-hidden="true"></i></a><div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable modal-lg" role="document"><div class="modal-content"><div class="modal-header text-center"><h4 class="modal-title w-100 font-weight-bold">搜索</h4><button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body mx-3"><div class="md-form mb-5"><input type="text" id="local-search-input" class="form-control validate"> <label data-error="x" data-success="v" for="local-search-input">关键词</label></div><div class="list-group" id="local-search-result"></div></div></div></div></div></main><footer class="text-center mt-5 py-3"><div class="footer-content"><p>Fight For The Happiness of Humanity</p><div><span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span><script src="/js/duration.js"></script></div></div><div class="statistics"><span id="busuanzi_container_site_pv" style="display:none">总访问量 <span id="busuanzi_value_site_pv"></span> 次 </span><span id="busuanzi_container_site_uv" style="display:none">总访客数 <span id="busuanzi_value_site_uv"></span> 人</span></div><div class="beian"><a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">沪ICP备20009486号-1</a></div></footer><script src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js"></script><link rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css"><script>NProgress.configure({showSpinner:!1,trickleSpeed:200}),NProgress.start(),document.addEventListener("DOMContentLoaded",(function(){window.NProgress&&window.NProgress.inc()})),window.addEventListener("load",(function(){NProgress.done()}))</script><script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script><script src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script><script src="/js/debouncer.js"></script><script src="/js/events.js"></script><script src="/js/plugins.js"></script><script src="/js/lazyload.js"></script><script src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js"></script><script src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js"></script><script src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js"></script><script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js"></script><script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js"></script><script>!function(t,i){(0,Fluid.plugins.typing)(i.getElementById("subtitle").title)}(window,document)</script><script src="/js/local-search.js"></script><script>document.querySelector("#local-search-input").onclick=function(){searchFunc("/local-search.xml","local-search-input","local-search-result"),this.onclick=null}</script><script src="/js/boot.js"></script></body></html>

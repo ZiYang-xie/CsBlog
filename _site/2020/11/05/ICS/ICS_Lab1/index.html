@@ -1,0 +1,245 @@
+<!DOCTYPE html><html lang="zh-CN" data-default-color-scheme="&#34;auto&#34;"><head><meta charset="UTF-8"><link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png"><link rel="icon" type="image/png" href="/img/favicon.png"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="theme-color" content="#2f4154"><meta name="description" content=""><meta name="author" content="Ziyang Xie"><meta name="keywords" content=""><title>ICS-Lab1 位运算 - ZiYang&#39;s Blog</title><link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css"><link rel="stylesheet" href="/lib/hint/hint.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css"><link rel="stylesheet" href="/css/main.css"><script id="fluid-configs">var Fluid=window.Fluid||{},CONFIG={hostname:"xcraft.tech",root:"/",version:"1.8.5",typing:{enable:!0,typeSpeed:70,cursorChar:"_",loop:!1},toc:{enable:!0,headingSelector:"h1,h2,h3,h4,h5,h6",collapseDepth:0},anchorjs:{enable:!0,element:"h1,h2,h3,h4,h5,h6",placement:"right",visible:"hover",icon:""},copy_btn:!0,image_zoom:{enable:!0},lazyload:{enable:!0,onlypost:!1},web_analytics:{enable:!1,baidu:null,google:null,gtag:null,tencent:{sid:null,cid:null},woyaola:null,cnzz:null,leancloud:{app_id:null,app_key:null,server_url:null}}}</script><script src="/js/utils.js"></script><script src="/js/color-schema.js"></script><meta name="generator" content="Hexo 5.4.2"></head><body><header style="height:70vh"><nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar"><div class="container"><a class="navbar-brand" href="/">&nbsp;<strong>ZiYang-Xie's Blog</strong>&nbsp;</a> <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><div class="animated-icon"><span></span><span></span><span></span></div></button><div class="collapse navbar-collapse" id="navbarSupportedContent"><ul class="navbar-nav ml-auto text-center"><li class="nav-item"><a class="nav-link" href="/"><i class="iconfont icon-home-fill"></i> 首页</a></li><li class="nav-item"><a class="nav-link" href="/archives/"><i class="iconfont icon-archive-fill"></i> 归档</a></li><li class="nav-item"><a class="nav-link" href="/categories/"><i class="iconfont icon-category-fill"></i> 分类</a></li><li class="nav-item"><a class="nav-link" href="/tags/"><i class="iconfont icon-tags-fill"></i> 标签</a></li><li class="nav-item"><a class="nav-link" href="/about/"><i class="iconfont icon-user-fill"></i> 关于</a></li><li class="nav-item" id="search-btn"><a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i class="iconfont icon-search"></i>&nbsp;</a></li><li class="nav-item" id="color-toggle-btn"><a class="nav-link" href="javascript:">&nbsp;<i class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a></li></ul></div></div></nav><div class="banner intro-2" id="background" parallax="true" style="background:url(/img/bg_in.jpg) no-repeat center center;background-size:cover"><div class="full-bg-img"><div class="mask flex-center" style="background-color:rgba(0,0,0,.3)"><div class="page-header text-center fade-in-up"><span class="h2" id="subtitle" title="ICS-Lab1 位运算"></span><div class="mt-3"><span class="post-meta"><i class="iconfont icon-date-fill" aria-hidden="true"></i> <time datetime="2020-11-05 23:58" pubdate>2020年11月5日 晚上</time></span></div><div class="mt-1"><span class="post-meta mr-2"><i class="iconfont icon-chart"></i> 5.5k 字 </span><span class="post-meta mr-2"><i class="iconfont icon-clock-fill"></i> 73 分钟</span></div></div></div></div></div></header><main><div class="container-fluid"><div class="row"><div class="d-none d-lg-block col-lg-2"></div><div class="col-lg-8 nopadding-md"><div class="container nopadding-md" id="board-ctn"><div class="py-5" id="board"><article class="post-content mx-auto"><h1 style="display:none">ICS-Lab1 位运算</h1><div class="markdown-body"><h1 id="ICS-Lab1-位运算"><a href="#ICS-Lab1-位运算" class="headerlink" title="ICS_Lab1-位运算"></a>ICS_Lab1-位运算</h1><blockquote><p>这个是CS:APP的第一个lab，也是我ICS课上的第一个lab，主要注重于使用受限制的位运算来完成操作</p></blockquote><hr><h2 id="Bits-c"><a href="#Bits-c" class="headerlink" title="Bits.c"></a><strong>Bits.c</strong></h2><h3 id="1-bitAnd—与"><a href="#1-bitAnd—与" class="headerlink" title="1. bitAnd—与"></a><strong>1. bitAnd—与</strong></h3><p><strong>题目：</strong></p><pre><code>只用~和|实现&amp;
+</code></pre><p><strong>样例：</strong></p><pre><code>bitAnd(6, 5) = 4
+</code></pre><p><strong>可使用操作：</strong> ~ |</p><p><strong>最大操作数限制：</strong> 8</p><p><strong>使用操作数：</strong> 4</p><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">bitAnd</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)</span> </span>&#123;
+  <span class="hljs-keyword">return</span> ~(~x | ~y); <span class="hljs-comment">//De Morgan&#x27;s laws</span>
+&#125;</code></pre><blockquote><p>应用摩根律 ~(x | y) = ~x &amp; ~y, 可得 x &amp; y = ~(~x | ~y)</p></blockquote><hr><h3 id="2-getByte—获取字节"><a href="#2-getByte—获取字节" class="headerlink" title="2. getByte—获取字节"></a><strong>2. getByte—获取字节</strong></h3><p><strong>题目：</strong></p><pre><code>从x中提取字节n, n编号从0至3
+</code></pre><p><strong>样例：</strong></p><pre><code>getByte(0x12345678,1) = 0x56
+</code></pre><p><strong>可使用操作：</strong> ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</p><p><strong>最大操作数限制：</strong> 6</p><p><strong>使用操作数：</strong> 3</p><p><strong>代码：</strong><br><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getByte</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> n)</span> </span>&#123;
+  <span class="hljs-keyword">return</span> (x &gt;&gt; (n &lt;&lt; <span class="hljs-number">3</span>)) &amp; <span class="hljs-number">0xff</span>;
+&#125;</code></pre></p><p><strong>分析：</strong></p><p><em>由于 1Byte = 8bits = 2^3bits， 所以 n Bytes = 2^3 </em>n bits*</p><blockquote><p>因而将n左移3位，即 n <em>2^3, 再将x右移 n </em>2^3 即可将所求字节放在低8位，将其与上0xff，即可取出字节。</p></blockquote><hr><h3 id="3-logicalShift—逻辑右移"><a href="#3-logicalShift—逻辑右移" class="headerlink" title="3. logicalShift—逻辑右移"></a><strong>3. logicalShift—逻辑右移</strong></h3><p><strong>题目：</strong></p><pre><code>将x逻辑右移n位
+</code></pre><p><strong>样例：</strong></p><pre><code>logicalShift(0x87654321,4) = 0x08765432
+</code></pre><p><strong>可使用操作：</strong> ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</p><p><strong>最大操作数限制：</strong> 20</p><p><strong>使用操作数：</strong> 10</p><p><strong>代码：</strong><br><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">logicalShift</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> n)</span> </span>&#123;
+  <span class="hljs-comment">//flag equals to: if n == 0 return 0; else return 1;</span>
+  <span class="hljs-keyword">int</span> flag = !!n;
+  <span class="hljs-keyword">int</span> mask = ~(flag &lt;&lt; (<span class="hljs-number">32</span> + (~n + <span class="hljs-number">1</span>)));
+  <span class="hljs-keyword">return</span> (x &gt;&gt; n) &amp; mask;
+&#125;</code></pre></p><p><strong>分析：</strong></p><ul><li><p>算数右移</p><blockquote><p>算数右移即在右移后用原符号位数将高位补齐，保持右移后二进制数的符号保持不变。</p></blockquote></li><li><p>逻辑右移</p><blockquote><p>逻辑右移即在右移后用 0 将高位补齐，是“逻辑上”的右移。</p></blockquote></li></ul><blockquote><p>在正常右移运算中使用的是算数右移，因而要解决的问题即对于负数如何将最高位补上0，而非符号位1。<br>我采取掩码的方式，先将x正常右移n位与上其高位的掩码，使其右移产生的高位变为0</p></blockquote><ul><li>掩码构造<blockquote><p>掩码不能草率的构造为 ~(-1 &lt;&lt; (32 - n)), 这种构造方式当n为0时会因-1被左移32位而导致异常，构造出来的mask仍为0</p></blockquote></li></ul><blockquote><p>由于不能使用if，为判断n是否为0，我才用了一个flag = !n + ~0, 其有很好的性质。当n为0时，flag也为0，而当n不为零时，flag统一为-1，这样使用flag代替原先的-1, 从而避免上述情况。</p><p>这样我们可以使用 mask = ~(flag &lt;&lt; (32 + (~n + 1)))，来构造掩码，当n为0时，flag为0，从而mask = -1，避免上述错误。</p></blockquote><hr><h3 id="4-bitCount—比特计数"><a href="#4-bitCount—比特计数" class="headerlink" title="4. bitCount—比特计数"></a><strong>4. bitCount—比特计数</strong></h3><p><strong>题目：</strong></p><pre><code>返回二进制数中1的个数
+</code></pre><p><strong>样例：</strong></p><pre><code>bitCount(5) = 2, bitCount(7) = 3
+</code></pre><p><strong>可使用操作：</strong> ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</p><p><strong>最大操作数限制：</strong> 40</p><p><strong>使用操作数：</strong> 36</p><p><strong>代码：</strong><br><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">bitCount</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;
+  <span class="hljs-keyword">int</span> tmp, l1, l2, l4, l8, l16; <span class="hljs-comment">//tmp is used to save ops</span>
+  tmp = (<span class="hljs-number">0x55</span> &lt;&lt; <span class="hljs-number">8</span>) + <span class="hljs-number">0x55</span>;
+  l1 = (tmp &lt;&lt; <span class="hljs-number">16</span>) + tmp; <span class="hljs-comment">//0x55555555</span>
+  tmp = (<span class="hljs-number">0x33</span> &lt;&lt; <span class="hljs-number">8</span>) + <span class="hljs-number">0x33</span>;
+  l2 = (tmp &lt;&lt; <span class="hljs-number">16</span>) + tmp; <span class="hljs-comment">//0x33333333</span>
+  tmp = (<span class="hljs-number">0x0f</span> &lt;&lt; <span class="hljs-number">8</span>) + <span class="hljs-number">0x0f</span>;
+  l4 = (tmp &lt;&lt; <span class="hljs-number">16</span>) + tmp; <span class="hljs-comment">//0x0f0f0f0f</span>
+  l8 = (<span class="hljs-number">0xff</span> &lt;&lt; <span class="hljs-number">16</span>) + <span class="hljs-number">0xff</span>; <span class="hljs-comment">//0x00ff00ff</span>
+  l16 = (<span class="hljs-number">0xff</span> &lt;&lt; <span class="hljs-number">8</span>) + <span class="hljs-number">0xff</span>; <span class="hljs-comment">//0x0000ffff</span>
+
+  x = (x &amp; l1) + ((x &gt;&gt; <span class="hljs-number">1</span>) &amp; l1);
+  x = (x &amp; l2) + ((x &gt;&gt; <span class="hljs-number">2</span>) &amp; l2);
+  x = (x &amp; l4) + ((x &gt;&gt; <span class="hljs-number">4</span>) &amp; l4);
+  x = (x &amp; l8) + ((x &gt;&gt; <span class="hljs-number">8</span>) &amp; l8);
+  x = (x &amp; l16) + ((x &gt;&gt; <span class="hljs-number">16</span>) &amp; l16);
+  <span class="hljs-keyword">return</span> x;
+&#125;</code></pre></p><p><strong>分析：</strong></p><ul><li>分治思想<blockquote><p>本题使用了一个简单的分治思想，对于一个二进制数，要对其中为1的位做计数， 对于1位二进制数来说，1的个数无非就是其本身所表示的1或0。利用这个特性，我们可以先将一个二进制数每一位独立分开为相间隔的两部分, 其每位表示的就是自身的二进制个数，再将两串二进制数对其相加，所得到的每两位分隔的二进制数就是表达这个位置的位为1的个数。</p></blockquote></li></ul><blockquote><p>进一步相加为4位，8位其所代表的含义不变，最后合并至32位二进制数，其所表示的就是原二进制数中所含1的个数。</p></blockquote><pre><code class="hljs cpp"><span class="hljs-comment">//以八位二进制数 10101110 为例//</span>
+按 <span class="hljs-number">1</span>|<span class="hljs-number">0</span>|<span class="hljs-number">1</span>|<span class="hljs-number">0</span>|<span class="hljs-number">1</span>|<span class="hljs-number">1</span>|<span class="hljs-number">1</span>|<span class="hljs-number">0</span> 分割， 为两串<span class="hljs-number">1</span>|<span class="hljs-number">1</span>|<span class="hljs-number">1</span>|<span class="hljs-number">1</span>和<span class="hljs-number">0</span>|<span class="hljs-number">0</span>|<span class="hljs-number">1</span>|<span class="hljs-number">0</span>，再将其合并，成为 <span class="hljs-number">01</span> | <span class="hljs-number">01</span> | <span class="hljs-number">10</span> | <span class="hljs-number">01</span>, 再将两串 <span class="hljs-number">01</span> | <span class="hljs-number">10</span> 和<span class="hljs-number">01</span> | <span class="hljs-number">01</span>合并得 <span class="hljs-number">0010</span> | <span class="hljs-number">0011</span>（这个很容易看出表示左四位有<span class="hljs-number">2</span>个<span class="hljs-number">1</span>，右四位有<span class="hljs-number">3</span>个<span class="hljs-number">1</span>），再次合并得 <span class="hljs-number">00000101</span>, 得到总共有<span class="hljs-number">5</span>个<span class="hljs-number">1</span>。
+
+<span class="hljs-comment">//对于32位二进制数亦按此继续操作即可//</span></code></pre><blockquote><p>于是为完成分割取位的操作，我们需要采用掩码</p></blockquote><ul><li>0x55555555 \ 0x33333333 \ 0x0f0f0f0f \ 0x0000ffff</li></ul><blockquote><p>利用位运算分别构造，使用tmp可以节约ops, 之后按照分治思想进行操作即可。</p></blockquote><hr><h3 id="5-bang—逻辑非"><a href="#5-bang—逻辑非" class="headerlink" title="5. bang—逻辑非"></a><strong>5. bang—逻辑非</strong></h3><p><strong>题目：</strong></p><pre><code>计算 !x 而不使用逻辑非!
+</code></pre><p><strong>样例：</strong></p><pre><code>bang(3) = 0, bang(0) = 1
+</code></pre><p><strong>可使用操作：</strong> ~ &amp; ^ | + &lt;&lt; &gt;&gt;</p><p><strong>最大操作数限制：</strong> 12</p><p><strong>使用操作数：</strong> 6</p><p><strong>代码：</strong><br><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">bang</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;
+  <span class="hljs-keyword">return</span> ((x &gt;&gt; <span class="hljs-number">31</span>) | ((~x + <span class="hljs-number">1</span>) &gt;&gt; <span class="hljs-number">31</span>)) + <span class="hljs-number">1</span>;
+&#125;</code></pre></p><p><strong>分析：</strong></p><ul><li>逻辑非<blockquote><p>对于逻辑非运算，应该都很熟悉，!x 当且仅当x为0时其为1，其余时候都为0，可以用来区分零和非零数。</p></blockquote></li></ul><blockquote><p>该问题的关键就是在于如何区分零和非零数，我们知道零的二补码仍然是零，而对于其余非零数，其符号位会有相应改变，利用这一性质，我们可以对零和非零数做出区分。</p><p>使用 <code>((x &gt;&gt; 31) | ((~x + 1) &gt;&gt; 31))</code>，将二进制数x的符号位与其补码左移31位相与，如若是非零数，其中符号位至少有一个为1，所以经过31位的算数右移后，其中一项必为-1，一项为0，相与之后得到-1,。而对于0来说，结果始终为0。</p><p>最后只要将结果+1，就能得到逻辑非的效果。</p></blockquote><hr><h3 id="6-tmin—最小数"><a href="#6-tmin—最小数" class="headerlink" title="6. tmin—最小数"></a><strong>6. tmin—最小数</strong></h3><p><strong>题目：</strong></p><pre><code>返回二补码中最小的数
+</code></pre><p><strong>可使用操作：</strong> ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</p><p><strong>最大操作数限制：</strong> 4</p><p><strong>使用操作数：</strong> 1</p><p><strong>代码：</strong><br><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">tmin</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>&#123;
+  <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">31</span>;
+&#125;</code></pre></p><p><strong>分析：</strong></p><blockquote><p>此题非常简单，我们知道计算机中负数是用其补码表示的，int所能表示的最小数为0x80000000(-2^31), 即符号位为1，其余皆为0，所以只要将1左移31位即可。</p></blockquote><hr><h3 id="7-fitsBits—填充比特"><a href="#7-fitsBits—填充比特" class="headerlink" title="7. fitsBits—填充比特"></a><strong>7. fitsBits—填充比特</strong></h3><p><strong>题目：</strong></p><pre><code>返回1如果x可以表示为n位二补码，反之返回0 (1 &lt;= n &lt;= 32)
+</code></pre><p><strong>样例：</strong></p><pre><code>fitsBits(5,3) = 0, fitsBits(-4,3) = 1
+</code></pre><p><strong>可使用操作：</strong> ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</p><p><strong>最大操作数限制：</strong> 15</p><p><strong>使用操作数：</strong> 7</p><p><strong>代码：</strong><br><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">fitsBits</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> n)</span> </span>&#123;
+  <span class="hljs-keyword">int</span> k = x &gt;&gt; (n + ~<span class="hljs-number">0</span>); <span class="hljs-comment">// if can k = 0 or -1</span>
+  <span class="hljs-keyword">return</span> !k | !(k + <span class="hljs-number">1</span>);
+&#125;</code></pre></p><p><strong>分析：</strong></p><blockquote><p>我们知道如若一个数能够被n位二进制数表示，则其第n位即最高位是符号位，那么将其右移n-1位后，根据算术右移，其得到的结果不是0，就是1。否则表示，其还有高于n位的位数， 即不能用n位表示。</p><p>所以用 k = x &gt;&gt; (n + ~0) 表示将其右移n-1位，再用 !k | !(k + 1) 判断k是否为0或-1</p></blockquote><hr><h3 id="8-divpwr2—除以2的n次方"><a href="#8-divpwr2—除以2的n次方" class="headerlink" title="8. divpwr2—除以2的n次方"></a><strong>8. divpwr2—除以2的n次方</strong></h3><p><strong>题目：</strong></p><pre><code>计算 x/(2^n), (0 &lt;= n &lt;= 30)
+</code></pre><p><strong>样例：</strong></p><pre><code>divpwr2(15,1) = 7, divpwr2(-33,4) = -2
+</code></pre><p><strong>可使用操作：</strong> ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</p><p><strong>最大操作数限制：</strong> 15</p><p><strong>使用操作数：</strong> 7</p><p><strong>代码：</strong><br><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">divpwr2</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> n)</span> </span>&#123;
+    <span class="hljs-keyword">int</span> sign = x &gt;&gt; <span class="hljs-number">31</span>;
+    <span class="hljs-keyword">int</span> bias = (<span class="hljs-number">1</span> &lt;&lt; n) + ~<span class="hljs-number">0</span>;
+    x = x + (bias &amp; sign);
+    <span class="hljs-keyword">return</span> x &gt;&gt; n;
+&#125;</code></pre></p><p><strong>分析：</strong></p><blockquote><p>本题的难点在于Round toward zero, 我们知道除以2的n次方即为将x右移n位。对于正数，尾数截断，因而自然向0舍入。而对于负数则不是如此，经试验在gcc上对于负数，其是向偶数舍入的，因而我们要对负数进行操作。</p><p>同时由于其向偶数舍入，我们不能简单地对负数进行+1操作，例如原本正确的 -7/4 = -1.25 = -1，但是经过+1操作后变为-6/4 = -1.5 Round toward even则变为了2。所以我们不应简单加一，而是加一个偏差值，其为2^n - 1，对于-7/4来说，就是3，加上bias之后得到(-7 + 3)/4即为-1。</p><p>所以我们构造bias = (1 &lt;&lt; n) + ~0 (由于不能用减号，-1用+~0表示)，然后我们要记得将sign取出，在x进行加操作时先检查一下x是否是负数，再进行操作。最后只要方向的将x右移n位即可。</p></blockquote><hr><h3 id="9-negate—取负"><a href="#9-negate—取负" class="headerlink" title="9. negate—取负"></a><strong>9. negate—取负</strong></h3><p><strong>题目：</strong></p><pre><code>返回-x
+</code></pre><p><strong>样例：</strong></p><pre><code>negate(1) = -1.
+</code></pre><p><strong>可使用操作：</strong> ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</p><p><strong>最大操作数限制：</strong> 5</p><p><strong>使用操作数：</strong> 2</p><p><strong>代码：</strong><br><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">negate</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;
+  <span class="hljs-keyword">return</span> ~x + <span class="hljs-number">1</span>;
+&#125;</code></pre></p><p><strong>分析：</strong></p><blockquote><p>很简单，对于有符号二进制数取负就是取其补码，而补码等于其取反加一，返回取反加一即可。</p></blockquote><hr><h3 id="10-isPositive—是正数"><a href="#10-isPositive—是正数" class="headerlink" title="10. isPositive—是正数"></a><strong>10. isPositive—是正数</strong></h3><p><strong>题目：</strong></p><pre><code>返回1如果x大于0，反之返回0
+</code></pre><p><strong>样例：</strong></p><pre><code>isPositive(-1) = 0.
+</code></pre><p><strong>可使用操作：</strong> ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</p><p><strong>最大操作数限制：</strong> 8</p><p><strong>使用操作数：</strong> 5</p><p><strong>代码：</strong><br><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">isPositive</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;
+  <span class="hljs-keyword">return</span> !(x &gt;&gt; <span class="hljs-number">31</span>) &amp; !!x;
+&#125;</code></pre></p><p><strong>分析：</strong></p><blockquote><p>这题关键在于把0剔除了，区分正负数就是区分其符号位，将x右移31位，负数得-1，正数为0，用一个逻辑非使正数为1，负数为0，然后再和!!x与一下就能剔除0</p></blockquote><ul><li>!!x 当 x == 0 时返回 0，不为 0 时返回 1</li></ul><hr><h3 id="11-isLessOrEqual—小于等于"><a href="#11-isLessOrEqual—小于等于" class="headerlink" title="11. isLessOrEqual—小于等于"></a><strong>11. isLessOrEqual—小于等于</strong></h3><p><strong>题目：</strong></p><pre><code>如果x小于等于y返回1，反之返回0
+</code></pre><p><strong>样例：</strong></p><pre><code>isLessOrEqual(4,5) = 1.
+</code></pre><p><strong>可使用操作：</strong> ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</p><p><strong>最大操作数限制：</strong> 24</p><p><strong>使用操作数：</strong> 14</p><p><strong>代码：</strong><br><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">isLessOrEqual</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)</span> </span>&#123;
+  <span class="hljs-keyword">int</span> res = y + (~x + <span class="hljs-number">1</span>); <span class="hljs-comment">// y - x</span>
+  <span class="hljs-keyword">int</span> xSign = x &gt;&gt; <span class="hljs-number">31</span>;
+  <span class="hljs-keyword">int</span> ySign = y &gt;&gt; <span class="hljs-number">31</span>;
+  <span class="hljs-keyword">int</span> dif = ~xSign + ySign;
+  <span class="hljs-keyword">return</span> (~(dif + <span class="hljs-number">1</span> &gt;&gt; <span class="hljs-number">31</span>) &amp; !(res &gt;&gt; <span class="hljs-number">31</span>)) | !dif;
+&#125;</code></pre></p><p><strong>分析：</strong></p><blockquote><p>我在这里采取了作差的方法 res = y + (~x + 1)，即计算一下y-x，判断其是否非负，同时也要考虑溢出问题，即 x 为负数，y为正数，y-x后溢出为负。</p><p>我将x,y右移31位代表其符号，若负则为-1，若正为0。我同时构造了一个 dif 以表示x,y符号之间的关系。</p><p><strong>dif = ~xSign + ySign</strong></p><ol><li>当 x &lt; 0 &amp;&amp; y &lt; 0 时，dif = -1</li><li>当 x &lt; 0 &amp;&amp; y &gt; 0 时，dif = 0</li><li>当 x &gt; 0 &amp;&amp; y &lt; 0 时，dif = -2</li><li>当 x &gt; 0 &amp;&amp; y &lt; 0 时，dif = -1</li></ol><p>将 x,y 符号之间的关系表达出来，把 dif 加一我们可以观察到当 x,y 同号时，dif为0，所以将其取反和 !(res &gt;&gt; 31) 相与，就可以表示同号不溢出的情况，而当 x &lt; 0, y &gt; 0 的情况发生时，我们注意到 dif 就是 0 ，所以我们直接或上 !dif 即可表达这种情况。</p></blockquote><hr><h3 id="12-ilog2—以2为底的对数"><a href="#12-ilog2—以2为底的对数" class="headerlink" title="12. ilog2—以2为底的对数"></a><strong>12. ilog2—以2为底的对数</strong></h3><p><strong>题目：</strong></p><pre><code>返回x取以2为底的对数并向下取整，输入的 x &gt; 0
+</code></pre><p><strong>样例：</strong></p><pre><code>ilog2(16) = 4
+</code></pre><p><strong>可使用操作：</strong> ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</p><p><strong>最大操作数限制：</strong> 90</p><p><strong>使用操作数：</strong> 48</p><p><strong>代码：</strong></p><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">ilog2</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;
+  <span class="hljs-keyword">int</span> tmp, l1, l2, l4, l8, l16;
+  x |= x &gt;&gt; <span class="hljs-number">1</span>;
+  x |= x &gt;&gt; <span class="hljs-number">2</span>;
+  x |= x &gt;&gt; <span class="hljs-number">4</span>;
+  x |= x &gt;&gt; <span class="hljs-number">8</span>;
+  x |= x &gt;&gt; <span class="hljs-number">16</span>;
+  
+  tmp = (<span class="hljs-number">0x55</span> &lt;&lt; <span class="hljs-number">8</span>) + <span class="hljs-number">0x55</span>;
+  l1 = (tmp &lt;&lt; <span class="hljs-number">16</span>) + tmp;
+  tmp = (<span class="hljs-number">0x33</span> &lt;&lt; <span class="hljs-number">8</span>) + <span class="hljs-number">0x33</span>;
+  l2 = (tmp &lt;&lt; <span class="hljs-number">16</span>) + tmp;
+  tmp = (<span class="hljs-number">0x0f</span> &lt;&lt; <span class="hljs-number">8</span>) + <span class="hljs-number">0x0f</span>;
+  l4 = (tmp &lt;&lt; <span class="hljs-number">16</span>) + tmp;
+  l8 = (<span class="hljs-number">0xff</span> &lt;&lt; <span class="hljs-number">16</span>) + <span class="hljs-number">0xff</span>;
+  l16 = (<span class="hljs-number">0xff</span> &lt;&lt; <span class="hljs-number">8</span>) + <span class="hljs-number">0xff</span>;
+
+  x = (x &amp; l1) + ((x &gt;&gt; <span class="hljs-number">1</span>) &amp; l1);
+  x = (x &amp; l2) + ((x &gt;&gt; <span class="hljs-number">2</span>) &amp; l2);
+  x = (x &amp; l4) + ((x &gt;&gt; <span class="hljs-number">4</span>) &amp; l4);
+  x = (x &amp; l8) + ((x &gt;&gt; <span class="hljs-number">8</span>) &amp; l8);
+  x = (x &amp; l16) + ((x &gt;&gt; <span class="hljs-number">16</span>) &amp; l16);
+  <span class="hljs-keyword">return</span> x + ~<span class="hljs-number">0</span>;</code></pre><p><strong>分析：</strong></p><blockquote><p>我们知道二进制数每位有其位权，所以对 x 取以2为底的对数就是指其为1的最高位的位权。为了获得最高位的位置，其实我们可以将其最高位往下全部变为1，再类似bitsCount数其中1的个数就行了。</p><p>我把 x 移位相与，保证最高位往下所有数字为1，再使用bitsCount就得到答案。</p><p>最后不要忘记减一</p></blockquote><hr><h3 id="13-float-neg—浮点数的负数"><a href="#13-float-neg—浮点数的负数" class="headerlink" title="13. float_neg—浮点数的负数"></a><strong>13. float_neg—浮点数的负数</strong></h3><p><strong>题目：</strong></p><pre><code>返回-f，当NaN时，返回参数f
+</code></pre><p><strong>可使用操作：</strong> 所有的整型操作，包括 ||, &amp;&amp;. 以及 if, while</p><p><strong>最大操作数限制：</strong> 10</p><p><strong>使用操作数：</strong> 5</p><p><strong>代码：</strong><br><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">unsigned</span> <span class="hljs-title">float_neg</span><span class="hljs-params">(<span class="hljs-keyword">unsigned</span> uf)</span> </span>&#123;
+  <span class="hljs-keyword">unsigned</span> exp = uf &amp; <span class="hljs-number">0x7f800000</span>;
+  <span class="hljs-keyword">unsigned</span> frac = uf &amp; <span class="hljs-number">0x007fffff</span>;
+  <span class="hljs-keyword">if</span>(exp == <span class="hljs-number">0x7f800000</span> &amp;&amp; frac)
+    <span class="hljs-keyword">return</span> uf;
+  <span class="hljs-keyword">return</span> uf ^= <span class="hljs-number">0x80000000</span>;
+&#125;</code></pre></p><p><strong>分析：</strong></p><ul><li>IEEE-float<blockquote><p>我们知道IEEE单精度浮点数，最高位为符号位，其后8位为阶码exp，后23位为尾数frac。其牺牲了精度来扩大了表达范围。</p></blockquote></li></ul><blockquote><p>而当 exp 全 1 时，如若frac非全零，则表示NaN。若全零，则表示无穷大/小。</p><p>这里我们只要将原数和符号位0x80000000异或一下，即可取负。不要忘记排除NaN的情况。</p></blockquote><hr><h3 id="14-float-i2f—int转float"><a href="#14-float-i2f—int转float" class="headerlink" title="14. float_i2f—int转float"></a><strong>14. float_i2f—int转float</strong></h3><p><strong>题目：</strong></p><pre><code>把int类型的数转换为float表示(比特形式)
+</code></pre><p><strong>可使用操作：</strong> 所有的整型操作，包括 ||, &amp;&amp;. 以及 if, while</p><p><strong>最大操作数限制：</strong> 30</p><p><strong>使用操作数：</strong> 30</p><p><strong>代码：</strong></p><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">unsigned</span> <span class="hljs-title">float_i2f</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;
+  <span class="hljs-keyword">unsigned</span> frac, mask1, mask2, mask3, mask4, d;
+  <span class="hljs-keyword">int</span> high = <span class="hljs-number">0x80000000</span>;
+  <span class="hljs-keyword">unsigned</span> sign = x &amp; <span class="hljs-number">0x80000000</span>;
+  <span class="hljs-keyword">unsigned</span> exp = <span class="hljs-number">127</span>;
+  <span class="hljs-keyword">int</span> count = <span class="hljs-number">32</span>, i;
+  <span class="hljs-keyword">if</span>(sign)
+    x = ~x + <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(!x)
+    <span class="hljs-keyword">return</span> x;
+  
+  frac = x;
+
+  <span class="hljs-keyword">for</span>(;high; high &gt;&gt;= <span class="hljs-number">1</span>)
+  &#123;
+    --count;
+    <span class="hljs-keyword">if</span>(high &amp; x)
+      <span class="hljs-keyword">break</span>;
+  &#125;
+  i = count - <span class="hljs-number">23</span>;
+  mask1 = ~(<span class="hljs-number">1</span> &lt;&lt; count); <span class="hljs-comment">// the highest 1</span>
+  mask2 = <span class="hljs-number">1</span> &lt;&lt; i; <span class="hljs-comment">//the lowest of remain frac;</span>
+  mask3 = mask2 &gt;&gt; <span class="hljs-number">1</span>; <span class="hljs-comment">// the highest of deserted bits </span>
+  mask4 = mask2 - <span class="hljs-number">1</span>; <span class="hljs-comment">// the deserted bits</span>
+  exp += count;
+
+  frac &amp;= mask1;
+  
+  <span class="hljs-keyword">if</span>(i &gt; <span class="hljs-number">0</span>)
+  &#123;
+    d = frac &amp; mask4; <span class="hljs-comment">// deserted bits</span>
+    <span class="hljs-keyword">if</span>(d &gt; mask3 | (d == mask3 &amp;&amp; frac &amp; mask2))
+    &#123;
+      frac += mask2;
+      <span class="hljs-keyword">if</span>(frac &gt; <span class="hljs-number">0x3fffffff</span>)
+      &#123;
+        frac = <span class="hljs-number">0</span>;
+        exp++;
+      &#125;
+    &#125;
+    frac &gt;&gt;= i;
+  &#125;
+  <span class="hljs-keyword">else</span>
+    frac &lt;&lt;= -i;
+
+  <span class="hljs-keyword">return</span> sign | exp &lt;&lt; <span class="hljs-number">23</span> | frac;
+&#125;</code></pre><p><strong>分析：</strong></p><blockquote><p>我认为这题比较难，我做了很久很久….它难在浮点数向偶数舍入以及其操作数的限制。</p><p>我们知道由于浮点数表示范围比整型大，我们可以将整型转换为浮点数，但是相应的会有一些精度的丢失，因为尾数frac只有23位，而int有31位可用。</p><p>所以其关键在于int的位数，一开始先把该取出来的都用掩码取出来，把负数和零处理一下。之后我利用了一个循环先找出int的最高位在哪，利用count计数。</p><p>后面我采取了四个掩码，分别代表最高位的1，留下的尾数中的最低位，要舍去的位数的最高位，以及舍弃的位数的掩码。利用这四个掩码我们可以达到存frac时，将其向<strong>偶数舍入</strong>。</p><p>具体操作是，先取出丢弃的尾数，将其存放在d中，看其有没有超过0.5 (即 d 是否大于 mask3) 如果大于，直接frac++就行。而如果等于的话，还要看frac是否是奇数 (即frac &amp; mask2是否为1) 如果是，则要向偶数舍入,frac++。</p><p>加完frac之后还要注意<strong>溢出问题</strong>，如果溢出了，要将frac置0，然后把阶码 exp++，再按照之前输出来的尾数移动，将尾数对齐即可 （位数最高默认为1不存，因而把最高位隐去）。</p><p>最后把符号位，阶码位和尾数位拼接，得到最后的结果。</p></blockquote><hr><h3 id="15-float-twice—float-2"><a href="#15-float-twice—float-2" class="headerlink" title="15. float_twice—float * 2"></a>15. float_twice—float * 2</h3><p><strong>题目：</strong></p><pre><code>返回float * 2, 当参数是NaN时，返回参数
+</code></pre><p><strong>可使用操作：</strong> 所有的整型操作，包括 ||, &amp;&amp;. 以及 if, while</p><p><strong>最大操作数限制：</strong> 30</p><p><strong>使用操作数：</strong> 20</p><p><strong>代码：</strong><br><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">unsigned</span> <span class="hljs-title">float_twice</span><span class="hljs-params">(<span class="hljs-keyword">unsigned</span> uf)</span> </span>&#123;
+  <span class="hljs-keyword">unsigned</span> sign = uf &amp; <span class="hljs-number">0x80000000</span>;
+  <span class="hljs-keyword">unsigned</span> exp = uf &amp; <span class="hljs-number">0x7f800000</span>;
+  <span class="hljs-keyword">unsigned</span> frac = uf &amp; <span class="hljs-number">0x007fffff</span>;
+  <span class="hljs-keyword">if</span>(exp == <span class="hljs-number">0x7f800000</span>) <span class="hljs-comment">//NaN &amp; inf</span>
+    <span class="hljs-keyword">return</span> uf;
+  <span class="hljs-keyword">if</span>(!exp &amp;&amp; !frac) <span class="hljs-comment">// 0</span>
+    <span class="hljs-keyword">return</span> uf;
+  <span class="hljs-keyword">if</span>(!exp &amp;&amp; frac &lt;= <span class="hljs-number">0x3fffff</span>)  <span class="hljs-comment">// low</span>
+    frac *= <span class="hljs-number">2</span>;
+  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(!exp &amp;&amp; frac &gt; <span class="hljs-number">0x3fffff</span>) <span class="hljs-comment">// high</span>
+  &#123;
+    exp += <span class="hljs-number">0x00800000</span>;
+    frac = (frac * <span class="hljs-number">2</span>) &amp; <span class="hljs-number">0x7fffff</span>;
+  &#125;
+  <span class="hljs-keyword">else</span> <span class="hljs-comment">// normal</span>
+    exp += <span class="hljs-number">0x00800000</span>;
+  <span class="hljs-keyword">return</span> sign + exp + frac;
+&#125;</code></pre></p><p><strong>分析：</strong></p><blockquote><p>主要要分析的地方，在于当阶码exp为0时，是否在乘2之后进位。所以要考虑尾数是否大于0x3fffff，如果小于等于之，则直接尾数乘2就行，不会溢出，否则则exp要进位，同时尾数乘2之后要与上0x7fffff保证不溢出。</p><p>其他正常情况直接exp++就行，注意一下特殊情况;</p></blockquote><p><em>本题中测试集中有一个inf，也要直接返回参数uf</em></p><hr><h2 id="Bits-honor-c"><a href="#Bits-honor-c" class="headerlink" title="Bits_honor.c"></a><strong>Bits_honor.c</strong></h2><h3 id="1-bitReverse—比特翻转"><a href="#1-bitReverse—比特翻转" class="headerlink" title="1. bitReverse—比特翻转"></a><strong>1. bitReverse—比特翻转</strong></h3><p><strong>题目：</strong></p><pre><code>把32比特int的比特位翻转
+</code></pre><p><strong>样例：</strong></p><pre><code>bitReverse(0x80000004) = 0x20000001
+bitReverse(0x7FFFFFFF) = 0xFFFFFFFE
+</code></pre><p><strong>最大操作数限制：</strong> 40</p><p><strong>使用操作数：</strong> 40</p><p><strong>代码：</strong><br><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">bitReverse</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span></span>
+<span class="hljs-function"></span>&#123;
+   <span class="hljs-keyword">int</span> tmp,l1, l2, l4, l8, l16;
+
+   tmp = (<span class="hljs-number">0x55</span> &lt;&lt; <span class="hljs-number">8</span>) + <span class="hljs-number">0x55</span>;
+   l1 = (tmp &lt;&lt; <span class="hljs-number">16</span>) + tmp;
+   tmp = (<span class="hljs-number">0x33</span> &lt;&lt; <span class="hljs-number">8</span>) + <span class="hljs-number">0x33</span>;
+   l2 = (tmp &lt;&lt; <span class="hljs-number">16</span>) + tmp;
+   tmp = (<span class="hljs-number">0x0f</span> &lt;&lt; <span class="hljs-number">8</span>) + <span class="hljs-number">0x0f</span>;
+   l4 = (tmp &lt;&lt; <span class="hljs-number">16</span>) + tmp;
+   l8 = (<span class="hljs-number">0xff</span> &lt;&lt; <span class="hljs-number">16</span>) + <span class="hljs-number">0xff</span>;
+   l16 = (<span class="hljs-number">0xff</span> &lt;&lt; <span class="hljs-number">8</span>) + <span class="hljs-number">0xff</span>;
+
+   x = ((x &gt;&gt; <span class="hljs-number">16</span>) &amp; l16) | (x &lt;&lt; <span class="hljs-number">16</span>);
+   x = ((x &gt;&gt; <span class="hljs-number">8</span>) &amp; l8) | ((x &amp; l8) &lt;&lt; <span class="hljs-number">8</span>);
+   x = ((x &gt;&gt; <span class="hljs-number">4</span>) &amp; l4) | ((x &amp; l4) &lt;&lt; <span class="hljs-number">4</span>);
+   x = ((x &gt;&gt; <span class="hljs-number">2</span>) &amp; l2) | ((x &amp; l2) &lt;&lt; <span class="hljs-number">2</span>);
+   x = ((x &gt;&gt; <span class="hljs-number">1</span>) &amp; l1) | ((x &amp; l1) &lt;&lt; <span class="hljs-number">1</span>);
+   <span class="hljs-keyword">return</span> x;
+&#125;</code></pre></p><p><strong>分析：</strong></p><blockquote><p>这题和 bitsCount 有异曲同工之妙，也是一个分治法，将32位二进制数一分为二，交换，再将内部各自再一分为二，交换，直至最底层2位二进制数互换位置，最后完成了将所有位数翻转的工作。</p><p>但值得注意的是，给出的是有符号的int，所以在右移交换位置时，会发生因为负数算术右移导致高位全是1的情况，致使在与的过程中高位全部变为1。这边只要将其移动后在和掩码相与就能解决这一问题。而对于低位，先与掩码相与再移动，可以省去取反得到高位掩码的操作数。再用tmp省一下操作数。</p><p>最后操作数正好卡在40</p></blockquote><hr><h3 id="2-mod3—取模3"><a href="#2-mod3—取模3" class="headerlink" title="2. mod3—取模3"></a><strong>2. mod3—取模3</strong></h3><p><strong>题目：</strong></p><pre><code>计算 x 取模 3，而不用%
+</code></pre><p><strong>样例：</strong></p><pre><code>mod3(100) = 1
+mod3(-100) = -1
+</code></pre><p><strong>可使用操作：</strong> ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</p><p><strong>最大操作数限制：</strong> 90</p><p><strong>使用操作数：</strong> 24</p><p><strong>代码：</strong><br><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">mod3</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span></span>
+<span class="hljs-function"></span>&#123;
+   <span class="hljs-keyword">int</span> mask = (<span class="hljs-number">0xff</span> &lt;&lt; <span class="hljs-number">8</span>) + <span class="hljs-number">0xff</span>;
+
+   x = (x &gt;&gt; <span class="hljs-number">16</span>) + (x &amp; mask); <span class="hljs-comment">// sum base 4^8 digits (a &lt;= 0x1FFFE)</span>
+   x = (x &gt;&gt; <span class="hljs-number">8</span>) + (x &amp; <span class="hljs-number">0xff</span>); <span class="hljs-comment">// sum base 4^4 digits (a &lt;= 0x2FD)</span>
+   x = (x &gt;&gt; <span class="hljs-number">4</span>) + (x &amp; <span class="hljs-number">0xf</span>); <span class="hljs-comment">// sum base 4^2 digits (a &lt;= 0x3C)</span>
+   x = (x &gt;&gt; <span class="hljs-number">2</span>) + (x &amp; <span class="hljs-number">0x3</span>); <span class="hljs-comment">// sum base 4^1 digits (a &lt;= 0x1D)</span>
+   x = (x &gt;&gt; <span class="hljs-number">2</span>) + (x &amp; <span class="hljs-number">0x3</span>); <span class="hljs-comment">// sum base 4^1 digits (a &lt;= 0x9)</span>
+   x = (x &gt;&gt; <span class="hljs-number">2</span>) + (x &amp; <span class="hljs-number">0x3</span>); <span class="hljs-comment">// sum base 4^1 digits (a &lt;= 0x4)</span>
+
+   x = (((x + <span class="hljs-number">1</span>) &gt;&gt; <span class="hljs-number">2</span>) + x) &amp; <span class="hljs-number">0x3</span>;
+   <span class="hljs-keyword">return</span> x;
+&#125;</code></pre></p><p><strong>分析：</strong></p><blockquote><p>这题难度算是比较大的，我参考了一些资料最后才写出这个代码。其实这题也与bitsCount有着一定的联系。</p><p>对于解这题有一个根本的公式即</p></blockquote><pre><code>a % m = ((b % m)(a/b) + (a % b)) % m
+其中b是进制数
+</code></pre><blockquote><p>我们知道，如果想要知道一个十进制的数能否被三整除，只要看它所有数位之和是否能被三整除就行了。其实这就是上述公式的特殊情况，由于10 mod 3 == 1 所以其就退化为</p></blockquote><pre><code>a mod m = (a/b + a % b) % m
+递归下来就是所有数位之和
+</code></pre><blockquote><p>而对于二进制的情况，我们可以将进制位b选为4，这样正好是两位二进制数，同时4 % 3 == 1，这样一来，对于二进制数中我们只需要统计所有两两数位(四进制)的和能否被三整除就行了。</p><p>而考虑到我们每做一次 a/b + a % b 统计数位和都减小了数的规模，这样只要做有限次就能够将数控制在&lt;=3的范围内。</p><p>对于a % 4，这是一个经典的trivial情况，我们只需要做 a &amp; 3，就能够轻松得到a % 4的值。而对于a/4，只需要做a &gt;&gt; 2即可。</p><p>对于二进制数我们不仅可以按两位两位的四进制数位和来数，也可以直接数其倍数(4^i)，从最大4^8开始统计，一步步减小x的值，最后将x做到&lt;= 3的范围</p><p>最后要判断x是否为3，如果为3的话则要置为0，我利用3数位全为1的特点，将其+1进位后，右移2位。如果为3，则得到的是1。将其再加上x，如若x是1或2，则还是不变，但如果是3，它又会进位到4，那么我们只要再与上0x3，则会得到0，即为想要的结果。</p></blockquote><hr><h3 id="3-float-f2i—float转int"><a href="#3-float-f2i—float转int" class="headerlink" title="3. float_f2i—float转int"></a><strong>3. float_f2i—float转int</strong></h3><p><strong>题目：</strong></p><pre><code>输入一个按二进制位储存的float（以unsigned表示），将其转为int输出。(NaN,inf，溢出直接返回参数)
+</code></pre><p><strong>可使用操作：</strong> 所有的整型操作，包括 ||, &amp;&amp;. 以及 if, while</p><p><strong>最大操作数限制：</strong> 30</p><p><strong>使用操作数：</strong> 17</p><p><strong>代码：</strong><br><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">float_f2i</span><span class="hljs-params">(<span class="hljs-keyword">unsigned</span> uf)</span></span>
+<span class="hljs-function"></span>&#123;
+   <span class="hljs-keyword">int</span> sign, exp, frac, res;
+   <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> tmp;
+
+   <span class="hljs-keyword">if</span>(!uf)
+      <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+   sign = uf &amp; <span class="hljs-number">0x80000000</span>;
+   exp = uf &amp; <span class="hljs-number">0x7f800000</span>;
+   frac = (uf &amp; <span class="hljs-number">0x007fffff</span>) | <span class="hljs-number">0x00800000</span>;
+
+   <span class="hljs-keyword">if</span>(exp == <span class="hljs-number">0x7f800000</span>) <span class="hljs-comment">//NaN and inf</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-number">0x80000000</span>u;
+
+   exp &gt;&gt;= <span class="hljs-number">23</span>;
+
+   <span class="hljs-keyword">if</span>(exp &lt; <span class="hljs-number">127</span>)
+      <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+   <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(exp &gt; <span class="hljs-number">158</span>)
+      <span class="hljs-keyword">return</span> <span class="hljs-number">0x80000000</span>u;
+   <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(exp &gt; <span class="hljs-number">150</span>)
+      tmp = frac &lt;&lt; (exp - <span class="hljs-number">150</span>);
+   <span class="hljs-keyword">else</span>
+      tmp = frac &gt;&gt; (<span class="hljs-number">150</span> - exp);
+
+      
+   <span class="hljs-keyword">if</span>(sign)
+      res = ~tmp + <span class="hljs-number">1</span>;
+   <span class="hljs-keyword">else</span>
+      res = tmp;
+   
+   <span class="hljs-keyword">return</span> res | sign;
+&#125;</code></pre></p><p><strong>分析：</strong></p><blockquote><p>这题特殊情况比较多，把NaN和inf处理一下，然后注意一下溢出情况，即取出来的exp - bias &gt; 31，肯定超过2^31整型储存的最大值，直接返回0x80000000u，然后对于exp小于127的，其指数是负数，直接返回int值为0。对于在exp - bias 在 0 到 31 之间的，由于frac只有23位，所以要将注意一下讨论23的情况。</p><p>最后把取出来的符号位对一下，如果负数取反加一，正数直接等，最后再或上符号位，返回答案。</p></blockquote><hr><h2 id="结果截图"><a href="#结果截图" class="headerlink" title="结果截图"></a><strong>结果截图</strong></h2><h3 id="bits-c"><a href="#bits-c" class="headerlink" title="bits.c"></a><strong>bits.c</strong></h3><p><img src="/2020/11/05/ICS/ICS_Lab1/ICS_Lab1/bits_btest.JPG" srcset="/img/loading.gif" alt="bits_btest"></p><p><img src="/2020/11/05/ICS/ICS_Lab1/ICS_Lab1/bits_dlc.png" srcset="/img/loading.gif" alt="bits_dlc"></p><h3 id="bits-honor-c"><a href="#bits-honor-c" class="headerlink" title="bits_honor.c"></a><strong>bits_honor.c</strong></h3><p><img src="/2020/11/05/ICS/ICS_Lab1/ICS_Lab1/bits_honor_btest.JPG" srcset="/img/loading.gif" alt="bits_honor_btest"></p><p><img src="/2020/11/05/ICS/ICS_Lab1/ICS_Lab1/bits_honor_dlc.png" srcset="/img/loading.gif" alt="bits_honor_dlc"></p><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><hr><p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E7%AE%97%E6%9C%AF%E5%8F%B3%E7%A7%BB/3711081?fr=aladdin">https://baike.baidu.com/item/%E7%AE%97%E6%9C%AF%E5%8F%B3%E7%A7%BB/3711081?fr=aladdin</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/jiahonghao2002/article/details/108223366">https://blog.csdn.net/jiahonghao2002/article/details/108223366</a><br><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/reverse-bits/solution/dian-dao-er-jin-zhi-wei-by-leetcode/">https://leetcode-cn.com/problems/reverse-bits/solution/dian-dao-er-jin-zhi-wei-by-leetcode/</a><br><a target="_blank" rel="noopener" href="http://homepage.cs.uiowa.edu/~jones/bcd/mod.shtml#exmod3">http://homepage.cs.uiowa.edu/~jones/bcd/mod.shtml#exmod3</a><br><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/38206659/answer/763034261">https://www.zhihu.com/question/38206659/answer/763034261</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/xindaxinda123/article/details/95617758">https://blog.csdn.net/xindaxinda123/article/details/95617758</a><br><a target="_blank" rel="noopener" href="https://www.runoob.com/w3cnote/32-float-storage.html">https://www.runoob.com/w3cnote/32-float-storage.html</a></p></div><hr><div><div class="post-metas mb-3"><div class="post-meta mr-3"><i class="iconfont icon-category"></i> <a class="hover-with-bg" href="/categories/ICS/">ICS</a></div><div class="post-meta"><i class="iconfont icon-tags"></i> <a class="hover-with-bg" href="/tags/Bits/">Bits</a></div></div><p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p><div class="post-prevnext row"><article class="post-prev col-6"><a href="/2020/11/06/ICS/ICS_Lab2/"><i class="iconfont icon-arrowleft"></i> <span class="hidden-mobile">ICS-Lab2 二进制炸弹</span> <span class="visible-mobile">上一篇</span></a></article><article class="post-next col-6"><a href="/2020/11/05/hello-world/"><span class="hidden-mobile">Hello World</span> <span class="visible-mobile">下一篇</span> <i class="iconfont icon-arrowright"></i></a></article></div></div><article class="comments" id="comments"><div id="gitalk-container"></div><script type="text/javascript">Fluid.utils.waitElementVisible("gitalk-container",(function(){Fluid.utils.createCssLink("/css/gitalk.css"),Fluid.utils.createScript("https://cdn.staticfile.org/gitalk/1.7.0/gitalk.min.js",(function(){new Gitalk({clientID:"bb132e59582b2e328abc",clientSecret:"884bfc0ac692d040744d5e4b81ffd6f1aa95cbc0",repo:"CsBlog",owner:"ZiYang-xie",admin:["ZiYang-xie"],id:"6fcf941245698d3a49caae805ff2d219",language:"zh-CN",labels:["Gitalk"],perPage:10,pagerDirection:"last",createIssueManually:!0,distractionFreeMode:!1}).render("gitalk-container")}))}))</script><noscript>Please enable JavaScript to view the comments</noscript></article></article></div></div></div><div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn"><div id="toc"><p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p><div class="toc-body" id="toc-body"></div></div></div></div></div><a id="scroll-top-button" href="#" role="button"><i class="iconfont icon-arrowup" aria-hidden="true"></i></a><div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable modal-lg" role="document"><div class="modal-content"><div class="modal-header text-center"><h4 class="modal-title w-100 font-weight-bold">搜索</h4><button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body mx-3"><div class="md-form mb-5"><input type="text" id="local-search-input" class="form-control validate"> <label data-error="x" data-success="v" for="local-search-input">关键词</label></div><div class="list-group" id="local-search-result"></div></div></div></div></div></main><footer class="text-center mt-5 py-3"><div class="footer-content"><p>Fight For The Happiness of Humanity</p><div><span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span><script src="/js/duration.js"></script></div></div><div class="statistics"><span id="busuanzi_container_site_pv" style="display:none">总访问量 <span id="busuanzi_value_site_pv"></span> 次 </span><span id="busuanzi_container_site_uv" style="display:none">总访客数 <span id="busuanzi_value_site_uv"></span> 人</span></div><div class="beian"><a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">沪ICP备20009486号-1</a></div></footer><script src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js"></script><link rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css"><script>NProgress.configure({showSpinner:!1,trickleSpeed:200}),NProgress.start(),document.addEventListener("DOMContentLoaded",(function(){window.NProgress&&window.NProgress.inc()})),window.addEventListener("load",(function(){NProgress.done()}))</script><script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script><script src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script><script src="/js/debouncer.js"></script><script src="/js/events.js"></script><script src="/js/plugins.js"></script><script src="/js/lazyload.js"></script><script src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js"></script><script src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js"></script><script src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js"></script><script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js"></script><script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js"></script><script>!function(t,i){(0,Fluid.plugins.typing)(i.getElementById("subtitle").title)}(window,document)</script><script src="/js/local-search.js"></script><script>document.querySelector("#local-search-input").onclick=function(){searchFunc("/local-search.xml","local-search-input","local-search-result"),this.onclick=null}</script><script src="/js/boot.js"></script></body></html>
